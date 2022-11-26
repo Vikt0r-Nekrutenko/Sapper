@@ -54,7 +54,10 @@ public:
         }
     }
 
-    stf::sdb::IChunk *getNew() override { return new Chunk; }
+    stf::sdb::IChunk *getNew() override
+    {
+        return new Chunk;
+    }
 };
 
 class GameField
