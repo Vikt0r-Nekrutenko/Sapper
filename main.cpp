@@ -97,6 +97,12 @@ public:
                     Cell *cell = (Cell*)chunk->at({x,y});
                     renderer.drawPixel({ x * 2 + 1, y + 2 }, cell->view(), cell->color());
                 }
+
+                if(GM->mCursor != stf::Vec2d{-1,-1})
+                {
+                    renderer.drawPixel({GM->mCursor.x * 2, GM->mCursor.y + 2}, '>');
+                    renderer.drawPixel({GM->mCursor.x * 2 + 2, GM->mCursor.y + 2}, '<');
+                }
             }
         }
 
