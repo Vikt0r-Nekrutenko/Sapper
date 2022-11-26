@@ -24,6 +24,13 @@ public:
     stf::sdb::IChunk *getNew() override { return new Chunk; }
 };
 
+class GameField
+{
+public:
+    Chunk mBegin = Chunk();
+    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({1,1}, &mBegin, true, "sapper.schnks");
+};
+
 class GameModel : public stf::smv::BaseModel
 {
 public:
