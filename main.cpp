@@ -72,7 +72,7 @@ class GameModel : public stf::smv::BaseModel
 {
 public:
     GameField mField = GameField();
-    stf::Vec2d mCursor { -1, -1 };
+    stf::Vec2d mCursor { Chunk::Width >> 1, Chunk::Height >> 1 };
 
     stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override
     {
