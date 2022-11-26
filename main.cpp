@@ -68,17 +68,11 @@ public:
     stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({1,1}, &mBegin, true, "sapper.schnks");
 };
 
-struct Cursor
-{
-    stf::Vec2d selected   { -1, -1 };
-    stf::Vec2d selectable { -1, -1 };
-};
-
 class GameModel : public stf::smv::BaseModel
 {
 public:
     GameField mField = GameField();
-    Cursor mCursor = Cursor();
+    stf::Vec2d mCursor { -1, -1 };
 
     stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override
     {
