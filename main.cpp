@@ -21,7 +21,11 @@ public:
     static constexpr int Width  = 9;
     static constexpr int Height = 9;
 
-    Chunk() : stf::sdb::IChunk({Width, Height}) { }
+    Chunk() : stf::sdb::IChunk({Width, Height})
+    {
+        mArray.resize(Width * Height);
+    }
+
     stf::sdb::IChunk *getNew() override { return new Chunk; }
 };
 
