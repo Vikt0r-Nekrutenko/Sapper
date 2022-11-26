@@ -123,6 +123,8 @@ public:
         default:
             break;
         }
+
+        mView.keyEventsHandler(key);
     }
 
     void mouseEvents(const stf::MouseRecord &mr) override
