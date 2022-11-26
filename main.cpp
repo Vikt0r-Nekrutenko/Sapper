@@ -6,9 +6,9 @@
 class Cell : public stf::sdb::ICell
 {
 public:
-    size_t sizeOfSelf() const override;
-    void save(FILE *file) override;
-    void load(FILE *file) override;
+    size_t sizeOfSelf() const override { return 0; }
+    void save(FILE *file) override { return; }
+    void load(FILE *file) override { return; }
 
     virtual uint8_t view() const = 0;
     virtual stf::ColorTable color() const = 0;
