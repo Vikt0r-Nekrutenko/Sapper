@@ -35,6 +35,8 @@ public:
 class GameModel : public stf::smv::BaseModel
 {
 public:
+    GameField mField = GameField();
+
     stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override
     {
         return sender;
@@ -49,6 +51,17 @@ class GameView : public stf::smv::IView
 public:
     void show(stf::Renderer &renderer) override
     {
+        GameModel *GM = static_cast<GameModel*>(m_model);
+
+        for(int y = 0; y < Chunk::Height; ++y) {
+            for(int x = 0; x < Chunk::Width; ++x) {
+                Chunk *chunk = (Chunk*)GM->mField.mField[{x,y}];
+                if(chunk != nullptr) {
+                    Cell *cell = (Cell*)chunk->at({x,y});
+                    renderer.drawPixel({ x + 2 + 2, y + 2 }, cell->view(), cell->color());
+                }
+            }
+        }
 
     }
 };
