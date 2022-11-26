@@ -7,7 +7,11 @@
 class Cell : public stf::sdb::ICell
 {
 public:
-    size_t sizeOfSelf() const override { return 0; }
+    size_t sizeOfSelf() const override
+    {
+        return sizeof(mView) + sizeof(mColor);
+    }
+
     void save(FILE *file) override { return; }
     void load(FILE *file) override { return; }
 
