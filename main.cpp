@@ -68,6 +68,12 @@ public:
     stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({1,1}, &mBegin, true, "sapper.schnks");
 };
 
+struct Cursor
+{
+    stf::Vec2d selected;
+    stf::Vec2d selectable;
+};
+
 class GameModel : public stf::smv::BaseModel
 {
 public:
