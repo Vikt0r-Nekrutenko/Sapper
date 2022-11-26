@@ -9,6 +9,9 @@ public:
     size_t sizeOfSelf() const override;
     void save(FILE *file) override;
     void load(FILE *file) override;
+
+    virtual uint8_t view() const = 0;
+    virtual stf::ColorTable color() const = 0;
 };
 
 class GameModel : public stf::smv::BaseModel
