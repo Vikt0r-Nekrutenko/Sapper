@@ -14,6 +14,12 @@ public:
     virtual stf::ColorTable color() const = 0;
 };
 
+class Chunk : public stf::sdb::IChunk
+{
+public:
+    stf::sdb::IChunk *getNew() override { return new Chunk; }
+};
+
 class GameModel : public stf::smv::BaseModel
 {
 public:
