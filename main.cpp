@@ -70,14 +70,15 @@ public:
 
 struct Cursor
 {
-    stf::Vec2d selected;
-    stf::Vec2d selectable;
+    stf::Vec2d selected   { -1, -1 };
+    stf::Vec2d selectable { -1, -1 };
 };
 
 class GameModel : public stf::smv::BaseModel
 {
 public:
     GameField mField = GameField();
+    Cursor mCursor = Cursor();
 
     stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override
     {
