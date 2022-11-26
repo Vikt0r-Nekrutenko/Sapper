@@ -12,7 +12,12 @@ public:
         return sizeof(mView) + sizeof(mColor);
     }
 
-    void save(FILE *file) override { return; }
+    void save(FILE *file) override
+    {
+        fwrite(&mView, sizeof(mView), 1, file);
+        fwrite(&mColor, sizeof(mColor), 1, file);
+    }
+
     void load(FILE *file) override { return; }
 
     virtual uint8_t view() const
