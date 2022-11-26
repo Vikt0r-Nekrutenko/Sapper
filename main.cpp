@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iview.hpp>
 #include "window.hpp"
 #include "imodel.hpp"
 #include "chunkedmap.hpp"
@@ -37,6 +38,18 @@ public:
     stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override
     {
         return sender;
+    }
+};
+
+class GameView : public stf::smv::IView
+{
+    GameView(GameModel *model)
+        : stf::smv::IView(model) { }
+
+public:
+    void show(stf::Renderer &renderer) override
+    {
+
     }
 };
 
