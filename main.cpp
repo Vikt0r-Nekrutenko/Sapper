@@ -18,7 +18,11 @@ public:
         fwrite(&mColor, sizeof(mColor), 1, file);
     }
 
-    void load(FILE *file) override { return; }
+    void load(FILE *file) override
+    {
+        fread(&mView, sizeof(mView), 1, file);
+        fread(&mColor, sizeof(mColor), 1, file);
+    }
 
     virtual uint8_t view() const
     {
