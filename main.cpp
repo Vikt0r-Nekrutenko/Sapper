@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <iview.hpp>
 #include "window.hpp"
 #include "imodel.hpp"
@@ -93,7 +94,7 @@ public:
                 Chunk *chunk = (Chunk*)GM->mField.mField[{x,y}];
                 if(chunk != nullptr) {
                     Cell *cell = (Cell*)chunk->at({x,y});
-                    renderer.drawPixel({ x + 2 + 2, y + 2 }, cell->view(), cell->color());
+                    renderer.drawPixel({ x * 2 + 1, y + 2 }, cell->view(), cell->color());
                 }
             }
         }
