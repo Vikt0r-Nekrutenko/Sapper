@@ -80,10 +80,10 @@ public:
 
 class GameView : public stf::smv::IView
 {
+public:
     GameView(GameModel *model)
         : stf::smv::IView(model) { }
 
-public:
     void show(stf::Renderer &renderer) override
     {
         GameModel *GM = static_cast<GameModel*>(m_model);
@@ -103,11 +103,14 @@ public:
 
 class Game : public stf::Window
 {
+    GameModel mModel = GameModel();
+    GameView mView = GameView(&mModel);
     bool isContinue = true;
 
 public:
     bool onUpdate(const float dt) override
     {
+        mView.show(renderer);
         return isContinue;
     }
 
