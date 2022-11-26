@@ -11,8 +11,20 @@ public:
     void save(FILE *file) override { return; }
     void load(FILE *file) override { return; }
 
-    virtual uint8_t view() const = 0;
-    virtual stf::ColorTable color() const = 0;
+    virtual uint8_t view() const
+    {
+        return mView;
+    }
+
+    virtual stf::ColorTable color() const
+    {
+        return mColor;
+    }
+
+protected:
+
+    uint8_t mView = '-';
+    stf::ColorTable mColor = stf::ColorTable::Default;
 };
 
 class Chunk : public stf::sdb::IChunk
