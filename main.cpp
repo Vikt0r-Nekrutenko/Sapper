@@ -49,6 +49,9 @@ public:
     Chunk() : stf::sdb::IChunk({Width, Height})
     {
         mArray.resize(Width * Height);
+        for(auto &cell : mArray) {
+            cell = new Cell;
+        }
     }
 
     stf::sdb::IChunk *getNew() override { return new Chunk; }
