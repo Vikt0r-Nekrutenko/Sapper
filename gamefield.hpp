@@ -109,6 +109,9 @@ public:
 
     void init(const stf::Vec2d &cursor)
     {
+//        if(static_cast<Chunk*>(mField[cursor])->isInitialised())
+//            return;
+
         auto checkAroundForBombs = [&](const stf::Vec2d &pos) {
             Cell *curcell = static_cast<Cell*>(mField.at(pos));
 
@@ -135,15 +138,15 @@ public:
         mBombsPositions.clear();
         for(auto &ichunk : mField.cache().chunksTable()) {
             Chunk *chunk = static_cast<Chunk*>(ichunk.mChunkRec.mChunk);
-//            mBombsPositions.insert(mBombsPositions.end(), chunk->mBombsPositions.begin(), chunk->mBombsPositions.end());
             for(auto &bombcell : chunk->mBombsPositions)
-                mBombsPositions.push_back(ichunk.mChunkRec.mPos * stf::Vec2d{Chunk::Width, Chunk::Height} + bombcell);
+                if(!chunk->isInitialised())
+                    checkAroundForBombs(ichunk.mChunkRec.mPos * stf::Vec2d{Chunk::Width, Chunk::Height} + bombcell);
+            static_cast<Chunk*>(ichunk.mChunkRec.mChunk)->initialise() = true;
         }
 
-        for(auto &pos : mBombsPositions) {
-            checkAroundForBombs(pos);
-            static_cast<Chunk*>(mField[pos])->initialise() = true;
-        }
+//        for(auto &pos : mBombsPositions) {
+//            checkAroundForBombs(pos);
+//        }
 //        activate(cursor);
 //        mIsInitialised = true;
     }

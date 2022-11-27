@@ -113,6 +113,7 @@ class Game : public stf::Window
 public:
     bool onUpdate(const float dt) override
     {
+        mView.update(dt);
         mView.show(renderer);
         return isContinue;
     }
