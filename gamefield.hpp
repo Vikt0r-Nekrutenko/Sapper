@@ -25,25 +25,6 @@ public:
 
     void init(const stf::Vec2d &cursor)
     {
-        int bombs = 10;
-        do {
-            for(int i = 0; i < Width * Height; ++i) {
-                const stf::Vec2d pos { i % Width, i / Width };
-                if(rand() % 100 < 10 && bombs > 0 && cursor != pos) {
-                    delete at(pos);
-                    put(pos, new BombCell);
-                    --bombs;
-                }
-            }
-        } while(bombs > 0);
-        activate(cursor);
-        mIsInitialised = true;
-    }
-
-    void activate(const stf::Vec2d cursor)
-    {
-        std::list<stf::Vec2d> emptyCells;
-
         auto checkAroundForBombs = [&](const stf::Vec2d &pos) {
             Cell *curcell = static_cast<Cell*>(at(pos));
 
@@ -56,18 +37,42 @@ public:
                         continue;
                     else if(x == pos.x && y == pos.y)
                         continue;
-                    else if(cell->uniqueIntView() == BombCell().uniqueIntView()) {
-                        if(curcell->uniqueIntView() != BombsNeighborCell().uniqueIntView()) {
-                            delete curcell;
-                            put(pos, new BombsNeighborCell());
-                            curcell = static_cast<Cell*>(at(pos));
-                        }
-                        ++curcell->bombsAround();
+                    else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+                        delete cell;
+                        put({x,y}, new BombsNeighborCell());
+                        cell = static_cast<Cell*>(at({x,y}));
                     }
+                    if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView())
+                        ++cell->bombsAround();
                 }
             }
             return curcell;
         };
+
+        int bombs = 10;
+        std::vector<stf::Vec2d> bombsPos;
+        do {
+            for(int i = 0; i < Width * Height; ++i) {
+                const stf::Vec2d pos { i % Width, i / Width };
+                if(rand() % 100 < 10 && bombs > 0 && cursor != pos) {
+                    delete at(pos);
+                    put(pos, new BombCell);
+                    bombsPos.push_back(pos);
+                    --bombs;
+                }
+            }
+        } while(bombs > 0);
+
+        for(auto &pos : bombsPos) {
+            checkAroundForBombs(pos);
+        }
+//        activate(cursor);
+        mIsInitialised = true;
+    }
+
+    void activate(const stf::Vec2d cursor)
+    {
+        std::list<stf::Vec2d> emptyCells;
 
         auto checkAround = [&](const stf::Vec2d &pos) {
             Cell *curcell = static_cast<Cell*>(at(pos));
@@ -79,26 +84,26 @@ public:
                     if(x<0 || y<0 || x > Chunk::Width - 1 || y > Chunk::Height - 1)
                         continue;
                     else if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
-//                        curcell->activate();
-                        continue;
+                        cell->activate();
+//                        continue;
                     }
-                    else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-                        if(checkAroundForBombs({x,y})->uniqueIntView() != BombsNeighborCell().uniqueIntView()) {
-                            delete cell;
-                            put({x,y}, new EmptyCell);
-                            emptyCells.push_back({x,y});
-                            static_cast<Cell*>(at({x,y}))->activate();
-                        }
-                    }
+//                    else //if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+//                        if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+//                            delete cell;
+//                            put({x,y}, new EmptyCell);
+//                            emptyCells.push_back({x,y});
+//                            static_cast<Cell*>(at({x,y}))->activate();
+//                        }
+//                    }
                 }
             }
         };
-        static_cast<Cell*>(at(cursor))->activate();
+//        static_cast<Cell*>(at(cursor))->activate();
         emptyCells.push_back(cursor);
 
         for(auto pos : emptyCells) {
             checkAround(pos);
-            emptyCells.pop_front();
+//            emptyCells.pop_front();
         }
     }
 
