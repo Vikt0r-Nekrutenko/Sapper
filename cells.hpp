@@ -93,7 +93,7 @@ public:
 
     uint8_t view() const override
     {
-        return mIsActivated ? mView : Cell::view();
+        return mIsActivated ? mView : '-';
     }
 };
 
