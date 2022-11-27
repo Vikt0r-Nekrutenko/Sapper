@@ -64,8 +64,8 @@ public:
 class GameField
 {
 public:
-    static constexpr int Width  = 2;
-    static constexpr int Height = 2;
+    static constexpr int Width  = 1;
+    static constexpr int Height = 1;
 
     Chunk mBegin = Chunk();
     stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
