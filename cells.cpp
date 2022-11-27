@@ -1,3 +1,8 @@
 #include "cells.hpp"
 
-z
+
+
+bool Cell::activate(Chunk &chunk)
+{
+    return mIsActivated = true;
+}

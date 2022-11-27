@@ -4,6 +4,8 @@
 #include "chunk.hpp"
 #include "renderer.hpp"
 
+class Chunk;
+
 class Cell : public stf::sdb::ICell
 {
 public:
@@ -49,6 +51,8 @@ public:
     {
         return mIsActivated = true;
     }
+
+    virtual bool activate(Chunk &chunk);
 
 protected:
 
