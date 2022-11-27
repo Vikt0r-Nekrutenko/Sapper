@@ -66,13 +66,19 @@ public:
         for(auto &pos : bombsPos) {
             checkAroundForBombs(pos);
         }
-//        activate(cursor);
+        activate(cursor);
         mIsInitialised = true;
     }
 
     void activate(const stf::Vec2d cursor)
     {
         std::list<stf::Vec2d> emptyCells;
+
+        Cell *cell = static_cast<Cell*>(at(cursor));
+        if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
+            cell->activate();
+            return;
+        }
 
         auto checkAround = [&](const stf::Vec2d &pos) {
             Cell *curcell = static_cast<Cell*>(at(pos));
@@ -87,13 +93,13 @@ public:
                         cell->activate();
 //                        continue;
                     }
-//                    else //if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-//                        if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-//                            delete cell;
-//                            put({x,y}, new EmptyCell);
-//                            emptyCells.push_back({x,y});
-//                            static_cast<Cell*>(at({x,y}))->activate();
-//                        }
+                    else //if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+                        if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+                            delete cell;
+                            put({x,y}, new EmptyCell);
+                            emptyCells.push_back({x,y});
+                            static_cast<Cell*>(at({x,y}))->activate();
+                        }
 //                    }
                 }
             }
