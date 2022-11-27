@@ -70,7 +70,7 @@ public:
         };
 
         auto checkAround = [&](const stf::Vec2d &pos) {
-//            Cell *curcell = static_cast<Cell*>(at(pos));
+            Cell *curcell = static_cast<Cell*>(at(pos));
 
             for(int y = pos.y-1; y <= pos.y+1; ++y) {
                 for(int x = pos.x-1; x <= pos.x+1; ++x) {
@@ -78,20 +78,22 @@ public:
 
                     if(x<0 || y<0 || x > Chunk::Width - 1 || y > Chunk::Height - 1)
                         continue;
-                    else if(x == pos.x && y == pos.y)
+                    else if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
+//                        curcell->activate();
                         continue;
-
+                    }
                     else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
                         if(checkAroundForBombs({x,y})->uniqueIntView() != BombsNeighborCell().uniqueIntView()) {
                             delete cell;
                             put({x,y}, new EmptyCell);
                             emptyCells.push_back({x,y});
+                            static_cast<Cell*>(at({x,y}))->activate();
                         }
                     }
                 }
             }
         };
-//        static_cast<Cell*>(at(cursor))->activate();
+        static_cast<Cell*>(at(cursor))->activate();
         emptyCells.push_back(cursor);
 
         for(auto pos : emptyCells) {

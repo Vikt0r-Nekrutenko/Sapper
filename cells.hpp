@@ -28,7 +28,7 @@ public:
 
     virtual uint8_t view() const
     {
-        return mView;
+        return mIsActivated ? mView : '-';
     }
 
     virtual int uniqueIntView() const
@@ -60,7 +60,7 @@ protected:
 
     int mBombsAround = 0;
     bool mIsActivated = false;
-    uint8_t mView = '-';
+    uint8_t mView = '.';
     stf::ColorTable mColor = stf::ColorTable::Default;
 };
 
@@ -89,11 +89,6 @@ public:
     int uniqueIntView() const override
     {
         return 2;
-    }
-
-    uint8_t view() const override
-    {
-        return mIsActivated ? mView : '-';
     }
 };
 
