@@ -127,9 +127,21 @@ public:
                     else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
                         put({x,y}, new BombsNeighborCell());
                         cell = static_cast<Cell*>(mField.at({x,y}));
+
+                        int mineCount = 0;
+                        for(int ny = y-1; ny <= y+1; ++ny) {
+                            for(int nx = x-1; nx <= x+1; ++nx) {
+                                Cell *neighbor = static_cast<Cell*>(mField.at({nx,ny}));
+                                if(nx<0 || ny<0 || nx > Width * Chunk::Width - 1 || ny > Height * Chunk::Height - 1)
+                                    continue;
+                                if(nx == x && ny == y)
+                                    continue;
+                                if(neighbor->uniqueIntView() == BombCell().uniqueIntView())
+                                    ++mineCount;
+                            }
+                        }
+                        cell->bombsAround() = mineCount;
                     }
-                    if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView())
-                        ++cell->bombsAround();
                 }
             }
             return curcell;
