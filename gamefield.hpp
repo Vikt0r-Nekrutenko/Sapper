@@ -14,11 +14,8 @@ public:
     Chunk() : stf::sdb::IChunk({Width, Height})
     {
         mArray.resize(Width * Height);
-//        for(auto &cell : mArray) {
-//            cell = new Cell;
-//        }
 
-        int bombs = 5;
+        int bombs = 10;
         do {
             for(int i = 0; i < Width * Height; ++i) {
                 const stf::Vec2d pos { i % Width, i / Width };
@@ -95,6 +92,9 @@ public:
                         put({x,y}, new EmptyCell);
                         emptyCells.push_back({x,y});
                         static_cast<Cell*>(at({x,y}))->activate();
+                    }
+                    else if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
+                        cell->activate();
                     }
                 }
             }
