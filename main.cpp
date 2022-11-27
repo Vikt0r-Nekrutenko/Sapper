@@ -63,6 +63,16 @@ public:
 class Chunk : public stf::sdb::IChunk
 {
 public:
+    static Cell *hidden;
+    static EmptyCell *empty;
+    static BombsNeighborCell *one;
+    static BombsNeighborCell *two;
+    static BombsNeighborCell *three;
+    static BombsNeighborCell *four;
+    static BombsNeighborCell *five;
+    static BombsNeighborCell *six;
+    static BombsNeighborCell *seven;
+    static BombsNeighborCell *eight;
     static constexpr int Width  = 9;
     static constexpr int Height = 9;
 
@@ -82,6 +92,18 @@ public:
         return new Chunk;
     }
 };
+
+Cell *Chunk::hidden = new Cell;
+EmptyCell *Chunk::empty = new EmptyCell;
+BombsNeighborCell *Chunk::one   = new BombsNeighborCell('1', stf::ColorTable::Cyan);
+BombsNeighborCell *Chunk::two   = new BombsNeighborCell('2', stf::ColorTable::Green);
+BombsNeighborCell *Chunk::three = new BombsNeighborCell('3', stf::ColorTable::Blue);
+BombsNeighborCell *Chunk::four  = new BombsNeighborCell('4', stf::ColorTable::Red);
+BombsNeighborCell *Chunk::five  = new BombsNeighborCell('5', stf::ColorTable::Yellow);
+BombsNeighborCell *Chunk::six   = new BombsNeighborCell('6', stf::ColorTable::Magenta);
+BombsNeighborCell *Chunk::seven = new BombsNeighborCell('7', stf::ColorTable::Default);
+BombsNeighborCell *Chunk::eight = new BombsNeighborCell('8', stf::ColorTable::White);
+
 
 class GameField
 {
