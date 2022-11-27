@@ -74,8 +74,45 @@ public:
     GameField mField = GameField();
     stf::Vec2d mCursor { Chunk::Width >> 1, Chunk::Height >> 1 };
 
+    stf::smv::IView *put(stf::smv::IView *sender)
+    {
+        return sender;
+    }
+
     stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override
     {
+        switch (key)
+        {
+        case 'w':
+            if(mCursor.y > 0)
+                mCursor.y -= 1;
+            else
+                mCursor.y = Chunk::Height - 1;
+            break;
+
+        case 'a':
+            if(mCursor.x > 0)
+                mCursor.x -= 1;
+            else
+                mCursor.x = Chunk::Width - 1;
+            break;
+
+        case 's':
+            if(mCursor.y < Chunk::Height-1)
+                mCursor.y += 1;
+            else
+                mCursor.y = 0;
+            break;
+
+        case 'd':
+            if(mCursor.x < Chunk::Width-1)
+                mCursor.x += 1;
+            else
+                mCursor.x = 0;
+            break;
+        case ' ':
+            return put(sender);
+        }
         return sender;
     }
 };
