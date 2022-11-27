@@ -18,9 +18,8 @@ public:
 
     stf::smv::IView *put(stf::smv::IView *sender)
     {
-        if(static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
-            mField.activate(mCursor);
-        }
+        mField.update(mCursor);
+
         return sender;
     }
 
@@ -94,9 +93,6 @@ public:
                 {
                     renderer.drawPixel({halfWidth * 2,     halfHeight + 2}, '>');
                     renderer.drawPixel({halfWidth * 2 + 2, halfHeight + 2}, '<');
-                }
-                if(!static_cast<Chunk*>(GM->mField.mField[{x,y}])->isInitialised()) {
-                    GM->mField.init({x,y});
                 }
             }
         }

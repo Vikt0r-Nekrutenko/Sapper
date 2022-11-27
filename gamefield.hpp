@@ -69,6 +69,11 @@ public:
         return static_cast<Cell*>(mField[pos]->put(pos, cell));
     }
 
+    void update(const stf::Vec2d &cursor)
+    {
+
+    }
+
     void activate(const stf::Vec2d cursor)
     {
         std::list<stf::Vec2d> emptyCells;
