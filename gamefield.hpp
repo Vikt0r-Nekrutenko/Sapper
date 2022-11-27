@@ -36,41 +36,6 @@ public:
         return new Chunk;
     }
 
-    void init(const stf::Vec2d &cursor)
-    {
-        auto checkAroundForBombs = [&](const stf::Vec2d &pos) {
-            Cell *curcell = static_cast<Cell*>(at(pos));
-
-            for(int y = pos.y-1; y <= pos.y+1; ++y) {
-                for(int x = pos.x-1; x <= pos.x+1; ++x) {
-
-                    Cell *cell = static_cast<Cell*>(at({x,y}));
-
-                    if(x<0 || y<0 || x > Chunk::Width - 1 || y > Chunk::Height - 1)
-                        continue;
-                    else if(x == pos.x && y == pos.y)
-                        continue;
-                    else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-                        delete cell;
-                        put({x,y}, new BombsNeighborCell());
-                        cell = static_cast<Cell*>(at({x,y}));
-                    }
-                    if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView())
-                        ++cell->bombsAround();
-                }
-            }
-            return curcell;
-        };
-
-        for(auto &pos : mBombsPositions) {
-            checkAroundForBombs(pos);
-        }
-        activate(cursor);
-        mIsInitialised = true;
-    }
-
-
-
     bool isInitialised() const
     {
         return mIsInitialised;
@@ -89,6 +54,8 @@ public:
 
     Chunk mBegin = Chunk();
     stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
+    std::vector<stf::Vec2d> mBombsPositions;
+
 
     Cell* put(const stf::Vec2d &pos, Cell* cell)
     {
@@ -132,6 +99,43 @@ public:
         for(auto pos : emptyCells) {
             checkAround(pos);
         }
+    }
+
+    void init(const stf::Vec2d &cursor)
+    {
+        auto checkAroundForBombs = [&](const stf::Vec2d &pos) {
+            Cell *curcell = static_cast<Cell*>(mField.at(pos));
+
+            for(int y = pos.y-1; y <= pos.y+1; ++y) {
+                for(int x = pos.x-1; x <= pos.x+1; ++x) {
+
+                    Cell *cell = static_cast<Cell*>(mField.at({x,y}));
+
+                    if(x<0 || y<0 || x > Chunk::Width - 1 || y > Chunk::Height - 1)
+                        continue;
+                    else if(x == pos.x && y == pos.y)
+                        continue;
+                    else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+                        put({x,y}, new BombsNeighborCell());
+                        cell = static_cast<Cell*>(mField.at({x,y}));
+                    }
+                    if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView())
+                        ++cell->bombsAround();
+                }
+            }
+            return curcell;
+        };
+
+        for(auto &ichunk : mField.cache().chunksTable()) {
+            Chunk *chunk = static_cast<Chunk*>(ichunk.mChunkRec.mChunk);
+            mBombsPositions.insert(mBombsPositions.end(), chunk->mBombsPositions.begin(), chunk->mBombsPositions.end());
+        }
+
+        for(auto &pos : mBombsPositions) {
+            checkAroundForBombs(pos);
+        }
+//        activate(cursor);
+//        mIsInitialised = true;
     }
 };
 

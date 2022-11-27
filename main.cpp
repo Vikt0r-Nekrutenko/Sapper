@@ -19,10 +19,10 @@ public:
     stf::smv::IView *put(stf::smv::IView *sender)
     {
         if(!static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
-            static_cast<Chunk*>(mField.mField[mCursor])->init(mCursor);
+            mField.init(mCursor);
         } else {
-            static_cast<Chunk*>(mField.mField[mCursor])->activate(mCursor);
-            static_cast<Cell*>(mField.mField.at(mCursor))->activate();
+//            mField.activate(mCursor);
+//            mField.at(mCursor))->activate();
         }
         return sender;
     }
