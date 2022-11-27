@@ -32,22 +32,10 @@ public:
                 if(rand() % 100 < 10 && bombs > 0 && cursor != pos) {
                     delete at(pos);
                     put(pos, new BombCell);
-                    mBombs.push_back(pos);
                     --bombs;
                 }
             }
         } while(bombs > 0);
-
-        for(stf::Vec2d &pos : mBombs) {
-            for(int y = pos.y-1; y <= pos.y+1; ++y) {
-                for(int x = pos.x-1; x <= pos.x+1; ++x) {
-                    if(x<0 || y<0 || x > Width - 1 || y > Height - 1)
-                        continue;
-                    else if(x == pos.x && y == pos.y)
-                        continue;
-                }
-            }
-        }
         activate(cursor);
         mIsInitialised = true;
     }
@@ -95,9 +83,6 @@ public:
 
 protected:
 
-    std::vector<stf::Vec2d> mBombs;
-    std::vector<stf::Vec2d> mBombsNeighbors;
-    std::vector<stf::Vec2d> mEmptys;
     bool mIsInitialised = false;
 };
 
