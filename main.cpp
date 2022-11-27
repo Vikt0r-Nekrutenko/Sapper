@@ -97,10 +97,21 @@ public:
                 if(rand() % 100 < 10 && bombs >= 0) {
                     delete at({ i % Width, i / Width });
                     put({ i % Width, i / Width }, new BombCell);
+                    mBombs.push_back({ i % Width, i / Width });
                     --bombs;
                 }
             }
         } while(bombs >= 0);
+
+        for(stf::Vec2d &pos : mBombs) {
+            for(int y = pos.y-1; y <= pos.y+1; ++y) {
+                for(int x = pos.x-1; x < pos.x+1; ++x) {
+                    if(x<0 || y<0 || x > Width - 1 || y > Height - 1)
+                        continue;
+                    if()
+                }
+            }
+        }
         mIsInitialised = true;
     }
 
