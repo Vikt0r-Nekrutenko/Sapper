@@ -70,7 +70,7 @@ class EmptyCell : public Cell
 public:
     EmptyCell()
     {
-        mView = '.';
+        mView = '#';
     }
 
     int uniqueIntView() const override
@@ -108,8 +108,8 @@ public:
 
     uint8_t view() const override
     {
-        return //mIsActivated ? '0' + mBombsAround : '-';
-                '0' + mBombsAround;
+        return mIsActivated ? '0' + mBombsAround : '-';
+//                '0' + mBombsAround;
     }
 };
 

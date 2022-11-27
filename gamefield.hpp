@@ -109,9 +109,6 @@ public:
 
     void init(const stf::Vec2d &cursor)
     {
-//        if(static_cast<Chunk*>(mField[cursor])->isInitialised())
-//            return;
-
         auto checkAroundForBombs = [&](const stf::Vec2d &pos) {
             Cell *curcell = static_cast<Cell*>(mField.at(pos));
 
@@ -124,7 +121,7 @@ public:
                         continue;
                     else if(x == pos.x && y == pos.y)
                         continue;
-                    else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+                    else if(cell->uniqueIntView() != BombCell().uniqueIntView()) {
                         put({x,y}, new BombsNeighborCell());
                         cell = static_cast<Cell*>(mField.at({x,y}));
 
@@ -155,12 +152,6 @@ public:
                     checkAroundForBombs(ichunk.mChunkRec.mPos * stf::Vec2d{Chunk::Width, Chunk::Height} + bombcell);
             static_cast<Chunk*>(ichunk.mChunkRec.mChunk)->initialise() = true;
         }
-
-//        for(auto &pos : mBombsPositions) {
-//            checkAroundForBombs(pos);
-//        }
-//        activate(cursor);
-//        mIsInitialised = true;
     }
 };
 

@@ -19,7 +19,7 @@ public:
     stf::smv::IView *put(stf::smv::IView *sender)
     {
         if(static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
-//            mField.activate(mCursor);
+            mField.activate(mCursor);
         }
         return sender;
     }
@@ -63,9 +63,6 @@ public:
 
     stf::smv::IView *update(stf::smv::IView *sender, const float dt) override
     {
-        if(!static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
-            mField.init(mCursor);
-        }
         return sender;
     }
 };
@@ -84,7 +81,7 @@ public:
         constexpr int halfWidth  = Chunk::Width  >> 1;
 
         for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight; ++j, ++y) {
-            for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth+1; ++i, ++x) {
+            for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth+2; ++i, ++x) {
                 Chunk *chunk = (Chunk*)GM->mField.mField[{x,y}];
                 if(chunk != nullptr) {
                     Cell *cell = (Cell*)chunk->at({x,y});
@@ -97,6 +94,9 @@ public:
                 {
                     renderer.drawPixel({halfWidth * 2,     halfHeight + 2}, '>');
                     renderer.drawPixel({halfWidth * 2 + 2, halfHeight + 2}, '<');
+                }
+                if(!static_cast<Chunk*>(GM->mField.mField[{x,y}])->isInitialised()) {
+                    GM->mField.init({x,y});
                 }
             }
         }
