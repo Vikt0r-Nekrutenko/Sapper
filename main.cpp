@@ -21,7 +21,7 @@ public:
         if(!static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
             mField.init(mCursor);
         } else {
-//            mField.activate(mCursor);
+            mField.activate(mCursor);
 //            mField.at(mCursor))->activate();
         }
         return sender;

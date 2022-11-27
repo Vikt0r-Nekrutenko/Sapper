@@ -41,6 +41,11 @@ public:
         return mIsInitialised;
     }
 
+    bool &initialise()
+    {
+        return mIsInitialised;
+    }
+
 protected:
 
     bool mIsInitialised = false;
@@ -82,7 +87,7 @@ public:
                     if(x<0 || y<0 || x > Chunk::Width - 1 || y > Chunk::Height - 1)
                         continue;
                     else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-                        delete cell;
+//                        delete cell;
                         put({x,y}, new EmptyCell);
                         emptyCells.push_back({x,y});
                         static_cast<Cell*>(mField.at({x,y}))->activate();
@@ -133,8 +138,9 @@ public:
 
         for(auto &pos : mBombsPositions) {
             checkAroundForBombs(pos);
+            static_cast<Chunk*>(mField[pos])->initialise() = true;
         }
-//        activate(cursor);
+        activate(cursor);
 //        mIsInitialised = true;
     }
 };
