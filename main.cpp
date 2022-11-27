@@ -108,19 +108,20 @@ public:
         return new Chunk;
     }
 
-    void init()
+    void init(const stf::Vec2d &cursor)
     {
         int bombs = 10;
         do {
             for(int i = 0; i < Width * Height; ++i) {
-                if(rand() % 100 < 10 && bombs >= 0) {
-                    delete at({ i % Width, i / Width });
-                    put({ i % Width, i / Width }, new BombCell);
-                    mBombs.push_back({ i % Width, i / Width });
+                const stf::Vec2d pos { i % Width, i / Width };
+                if(rand() % 100 < 10 && bombs > 0 && cursor != pos) {
+                    delete at(pos);
+                    put(pos, new BombCell);
+                    mBombs.push_back(pos);
                     --bombs;
                 }
             }
-        } while(bombs >= 0);
+        } while(bombs > 0);
 
         for(stf::Vec2d &pos : mBombs) {
             for(int y = pos.y-1; y <= pos.y+1; ++y) {
@@ -186,7 +187,7 @@ public:
     stf::smv::IView *put(stf::smv::IView *sender)
     {
         if(!static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
-            static_cast<Chunk*>(mField.mField[mCursor])->init();
+            static_cast<Chunk*>(mField.mField[mCursor])->init(mCursor);
         }
         return sender;
     }
