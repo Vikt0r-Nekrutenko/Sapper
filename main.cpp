@@ -127,12 +127,17 @@ public:
     {
         GameModel *GM = static_cast<GameModel*>(m_model);
 
-        for(int y = 0; y < Chunk::Height; ++y) {
-            for(int x = 0; x < Chunk::Width; ++x) {
+        const int halfHeight = Chunk::Height >> 1;
+        const int halfWidth  = Chunk::Width  >> 1;
+
+        for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight; ++j, ++y) {
+            for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth; ++i, ++x) {
                 Chunk *chunk = (Chunk*)GM->mField.mField[{x,y}];
                 if(chunk != nullptr) {
                     Cell *cell = (Cell*)chunk->at({x,y});
-                    renderer.drawPixel({ x * 2 + 1, y + 2 }, cell->view(), cell->color());
+                    renderer.drawPixel({ i * 2 + 1, j + 2 }, cell->view(), cell->color());
+                } else {
+                    renderer.drawPixel({ i * 2 + 1, j + 2 }, '.');
                 }
 
                 if(GM->mCursor != stf::Vec2d{-1,-1})
