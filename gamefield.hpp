@@ -141,7 +141,7 @@ public:
         }
 
         for(auto &pos : mBombsPositions) {
-//            checkAroundForBombs(pos);
+            checkAroundForBombs(pos);
             static_cast<Chunk*>(mField[pos])->initialise() = true;
         }
 //        activate(cursor);

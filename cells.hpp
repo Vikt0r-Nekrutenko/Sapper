@@ -108,8 +108,8 @@ public:
 
     uint8_t view() const override
     {
-        return mIsActivated ? '0' + mBombsAround : '-';
-//                '0' + mBombsAround;
+        return //mIsActivated ? '0' + mBombsAround : '-';
+                '0' + mBombsAround;
     }
 };
 

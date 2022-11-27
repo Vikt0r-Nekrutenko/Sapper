@@ -18,11 +18,8 @@ public:
 
     stf::smv::IView *put(stf::smv::IView *sender)
     {
-        if(!static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
-            mField.init(mCursor);
-        } else {
+        if(static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
             mField.activate(mCursor);
-//            mField.at(mCursor))->activate();
         }
         return sender;
     }
@@ -63,6 +60,14 @@ public:
         }
         return sender;
     }
+
+    stf::smv::IView *update(stf::smv::IView *sender, const float dt) override
+    {
+        if(!static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
+            mField.init(mCursor);
+        }
+        return sender;
+    }
 };
 
 class GameView : public stf::smv::IView
@@ -78,8 +83,8 @@ public:
         constexpr int halfHeight = Chunk::Height >> 1;
         constexpr int halfWidth  = Chunk::Width  >> 1;
 
-        for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight; ++j, ++y) {
-            for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth; ++i, ++x) {
+        for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight+2; ++j, ++y) {
+            for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth+2; ++i, ++x) {
                 Chunk *chunk = (Chunk*)GM->mField.mField[{x,y}];
                 if(chunk != nullptr) {
                     Cell *cell = (Cell*)chunk->at({x,y});
