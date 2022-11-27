@@ -28,8 +28,8 @@ public:
 
     virtual uint8_t view() const
     {
-        return mView;
-//        return mIsActivated ? mView : '-';
+//        return mView;
+        return mIsActivated ? mView : '-';
     }
 
     virtual stf::ColorTable color() const
@@ -47,9 +47,14 @@ public:
         return mBombsAround;
     }
 
+    bool activate()
+    {
+        return mIsActivated = true;
+    }
+
 protected:
 
-    int mBombsAround = -1;
+    int mBombsAround = -2;
     bool mIsActivated = false;
     uint8_t mView = '-';
     stf::ColorTable mColor = stf::ColorTable::Default;
@@ -61,6 +66,7 @@ public:
     EmptyCell()
     {
         mView = '.';
+        mBombsAround = -3;
     }
 };
 
@@ -85,7 +91,7 @@ public:
 
     uint8_t view() const override
     {
-        return '0' + mBombsAround;
+        return mIsActivated ? '0' + mBombsAround : '-';
     }
 };
 
@@ -130,6 +136,29 @@ public:
                         continue;
                     else if(x == pos.x && y == pos.y)
                         continue;
+                }
+            }
+        }
+        activate(cursor);
+        mIsInitialised = true;
+    }
+
+    void activate(const stf::Vec2d &cursor)
+    {
+        std::list<stf::Vec2d> emptyCells;
+        auto checkAround = [&](const stf::Vec2d &pos) {
+            for(int y = pos.y-1; y <= pos.y+1; ++y) {
+                for(int x = pos.x-1; x <= pos.x+1; ++x) {
+                    if(x<0 || y<0 || x > Width - 1 || y > Height - 1)
+                        continue;
+                    else if(x == pos.x && y == pos.y)
+                        continue;
+                    else if(static_cast<Cell*>(at({x,y}))->bombsAround() == -2) {
+                        delete at({x,y});
+                        put({x,y}, new EmptyCell);
+                        static_cast<Cell*>(at({x,y}))->activate();
+                        emptyCells.push_back({x,y});
+                    }
                     else if(static_cast<Cell*>(at({x,y}))->bombsAround() == -1) {
                         delete at({x,y});
                         put({x,y}, new BombsNeighborCell);
@@ -140,8 +169,14 @@ public:
                     }
                 }
             }
+        };
+        static_cast<Cell*>(at(cursor))->activate();
+        emptyCells.push_back(cursor);
+
+        for(auto pos : emptyCells) {
+            checkAround(pos);
+            emptyCells.pop_front();
         }
-        mIsInitialised = true;
     }
 
     bool isInitialised() const
@@ -188,6 +223,8 @@ public:
     {
         if(!static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
             static_cast<Chunk*>(mField.mField[mCursor])->init(mCursor);
+        } else {
+            static_cast<Chunk*>(mField.mField[mCursor])->activate(mCursor);
         }
         return sender;
     }
