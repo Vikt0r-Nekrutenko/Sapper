@@ -64,8 +64,11 @@ public:
 class GameField
 {
 public:
+    static constexpr int Width  = 9;
+    static constexpr int Height = 9;
+
     Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({1,1}, &mBegin, true, "sapper.schnks");
+    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({2,2}, &mBegin, true, "sapper.schnks");
 };
 
 class GameModel : public stf::smv::BaseModel
@@ -127,8 +130,8 @@ public:
     {
         GameModel *GM = static_cast<GameModel*>(m_model);
 
-        const int halfHeight = Chunk::Height >> 1;
-        const int halfWidth  = Chunk::Width  >> 1;
+        constexpr int halfHeight = Chunk::Height >> 1;
+        constexpr int halfWidth  = Chunk::Width  >> 1;
 
         for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight; ++j, ++y) {
             for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth; ++i, ++x) {
