@@ -28,7 +28,7 @@ public:
 
     virtual uint8_t view() const
     {
-        return mView;
+        return mIsActivated ? mView : '-';
     }
 
     virtual stf::ColorTable color() const
@@ -38,6 +38,7 @@ public:
 
 protected:
 
+    bool mIsActivated = false;
     uint8_t mView = '-';
     stf::ColorTable mColor = stf::ColorTable::Default;
 };
