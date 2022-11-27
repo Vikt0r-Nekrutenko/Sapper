@@ -32,6 +32,11 @@ public:
         return mIsActivated ? mView : '-';
     }
 
+    virtual int uniqueIntView() const
+    {
+        return 0;
+    }
+
     virtual stf::ColorTable color() const
     {
         return mColor;
@@ -52,7 +57,7 @@ public:
         return mIsActivated = true;
     }
 
-    virtual bool activate(Chunk &chunk);
+    virtual Cell *activate(Chunk &chunk);
 
 protected:
 
@@ -69,6 +74,11 @@ public:
     {
         mView = '.';
         mBombsAround = -3;
+    }
+
+    int uniqueIntView() const override
+    {
+        return 1;
     }
 };
 
@@ -94,6 +104,11 @@ public:
     uint8_t view() const override
     {
         return mIsActivated ? '0' + mBombsAround : '-';
+    }
+
+    int uniqueIntView() const override
+    {
+        return 2;
     }
 };
 
