@@ -85,14 +85,19 @@ public:
         int bombs = 10;
         do {
             for(int i = 0; i < Width * Height; ++i) {
-                if(stf::Random().getNum(0, 100) < 10) {
+                if(rand() % 100 < 10 && bombs >= 0) {
                     delete at({ i % Width, i / Width });
                     put({ i % Width, i / Width }, new BombsNeighborCell('1', stf::ColorTable::Cyan));
                     --bombs;
                 }
             }
-        } while(bombs);
+        } while(bombs >= 0);
         mIsInitialised = true;
+    }
+
+    bool isInitialised() const
+    {
+        return mIsInitialised;
     }
 
 protected:
@@ -127,11 +132,14 @@ public:
 
     GameModel()
     {
-        mField.put({0,0}, new BombsNeighborCell('1',stf::ColorTable::Cyan));
+
     }
 
     stf::smv::IView *put(stf::smv::IView *sender)
     {
+        if(!static_cast<Chunk*>(mField.mField[mCursor])->isInitialised()) {
+            static_cast<Chunk*>(mField.mField[mCursor])->init();
+        }
         return sender;
     }
 
