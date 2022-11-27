@@ -28,12 +28,18 @@ public:
 
     virtual uint8_t view() const
     {
-        return mIsActivated ? mView : '-';
+        return mView;
+//        return mIsActivated ? mView : '-';
     }
 
     virtual stf::ColorTable color() const
     {
         return mColor;
+    }
+
+    int bombsAround() const
+    {
+        return mBombsAround;
     }
 
     int& bombsAround()
@@ -43,7 +49,7 @@ public:
 
 protected:
 
-    int mBombsAround = 0;
+    int mBombsAround = -1;
     bool mIsActivated = false;
     uint8_t mView = '-';
     stf::ColorTable mColor = stf::ColorTable::Default;
@@ -64,16 +70,22 @@ public:
     BombCell()
     {
         mView = 'o';
+        mBombsAround = 0;
     }
 };
 
 class BombsNeighborCell : public Cell
 {
 public:
-    BombsNeighborCell(const uint8_t bombs, const stf::ColorTable color)
+    BombsNeighborCell()
     {
-        mView = bombs;
-        mColor = color;
+        mColor = stf::ColorTable::Red;
+        mBombsAround = 1;
+    }
+
+    uint8_t view() const override
+    {
+        return '0' + mBombsAround;
     }
 };
 
@@ -112,10 +124,19 @@ public:
 
         for(stf::Vec2d &pos : mBombs) {
             for(int y = pos.y-1; y <= pos.y+1; ++y) {
-                for(int x = pos.x-1; x < pos.x+1; ++x) {
+                for(int x = pos.x-1; x <= pos.x+1; ++x) {
                     if(x<0 || y<0 || x > Width - 1 || y > Height - 1)
                         continue;
-                    if()
+                    else if(x == pos.x && y == pos.y)
+                        continue;
+                    else if(static_cast<Cell*>(at({x,y}))->bombsAround() == -1) {
+                        delete at({x,y});
+                        put({x,y}, new BombsNeighborCell);
+                    }
+                    else if(static_cast<Cell*>(at({x,y}))->bombsAround() > 0)
+                    {
+                        static_cast<BombsNeighborCell*>(at({x,y}))->bombsAround()++;
+                    }
                 }
             }
         }
