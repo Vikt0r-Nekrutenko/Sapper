@@ -86,9 +86,14 @@ public:
         mView = 'o';
     }
 
-    int uniqueIntView() const
+    int uniqueIntView() const override
     {
         return 2;
+    }
+
+    uint8_t view() const override
+    {
+        return mIsActivated ? mView : Cell::view();
     }
 };
 
