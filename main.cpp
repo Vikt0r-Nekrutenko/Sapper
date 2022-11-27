@@ -36,8 +36,14 @@ public:
         return mColor;
     }
 
+    int& bombsAround()
+    {
+        return mBombsAround;
+    }
+
 protected:
 
+    int mBombsAround = 0;
     bool mIsActivated = false;
     uint8_t mView = '-';
     stf::ColorTable mColor = stf::ColorTable::Default;
