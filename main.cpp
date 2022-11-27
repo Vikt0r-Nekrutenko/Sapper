@@ -64,11 +64,11 @@ public:
 class GameField
 {
 public:
-    static constexpr int Width  = 9;
-    static constexpr int Height = 9;
+    static constexpr int Width  = 2;
+    static constexpr int Height = 2;
 
     Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({2,2}, &mBegin, true, "sapper.schnks");
+    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
 };
 
 class GameModel : public stf::smv::BaseModel
@@ -90,25 +90,25 @@ public:
             if(mCursor.y > 0)
                 mCursor.y -= 1;
             else
-                mCursor.y = Chunk::Height - 1;
+                mCursor.y = GameField::Height * Chunk::Height - 1;
             break;
 
         case 'a':
             if(mCursor.x > 0)
                 mCursor.x -= 1;
             else
-                mCursor.x = Chunk::Width - 1;
+                mCursor.x = GameField::Width * Chunk::Width - 1;
             break;
 
         case 's':
-            if(mCursor.y < Chunk::Height-1)
+            if(mCursor.y < GameField::Height * Chunk::Height-1)
                 mCursor.y += 1;
             else
                 mCursor.y = 0;
             break;
 
         case 'd':
-            if(mCursor.x < Chunk::Width-1)
+            if(mCursor.x < GameField::Width * Chunk::Width-1)
                 mCursor.x += 1;
             else
                 mCursor.x = 0;
@@ -145,8 +145,8 @@ public:
 
                 if(GM->mCursor != stf::Vec2d{-1,-1})
                 {
-                    renderer.drawPixel({GM->mCursor.x * 2, GM->mCursor.y + 2}, '>');
-                    renderer.drawPixel({GM->mCursor.x * 2 + 2, GM->mCursor.y + 2}, '<');
+                    renderer.drawPixel({halfWidth * 2,     halfHeight + 2}, '>');
+                    renderer.drawPixel({halfWidth * 2 + 2, halfHeight + 2}, '<');
                 }
             }
         }
