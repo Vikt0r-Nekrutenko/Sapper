@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        cells.cpp \
         main.cpp
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../stf/release/ -lstf
@@ -16,3 +17,6 @@ INCLUDEPATH += $$PWD/../stf \
 DEPENDPATH += $$PWD/../stf \
                 $$PWD/../stf/smv \
                 $$PWD/../stf/sdb \
+
+HEADERS += \
+    cells.hpp
