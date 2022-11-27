@@ -51,6 +51,15 @@ public:
     }
 };
 
+class BombCell : public Cell
+{
+public:
+    BombCell()
+    {
+        mView = 'o';
+    }
+};
+
 class BombsNeighborCell : public Cell
 {
 public:
@@ -87,7 +96,7 @@ public:
             for(int i = 0; i < Width * Height; ++i) {
                 if(rand() % 100 < 10 && bombs >= 0) {
                     delete at({ i % Width, i / Width });
-                    put({ i % Width, i / Width }, new BombsNeighborCell('1', stf::ColorTable::Cyan));
+                    put({ i % Width, i / Width }, new BombCell);
                     --bombs;
                 }
             }
