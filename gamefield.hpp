@@ -14,6 +14,9 @@ public:
     Chunk() : stf::sdb::IChunk({Width, Height})
     {
         mArray.resize(Width * Height);
+        for(auto &cell : mArray) {
+            cell = new Cell;
+        }
 
         int bombs = 10;
         do {
@@ -24,8 +27,6 @@ public:
                     put(pos, new BombCell);
                     mBombsPositions.push_back(pos);
                     --bombs;
-                } else {
-                    put(pos, new Cell);
                 }
             }
         } while(bombs > 0);
@@ -54,8 +55,8 @@ protected:
 class GameField
 {
 public:
-    static constexpr int Width  = 1;
-    static constexpr int Height = 1;
+    static constexpr int Width  = 2;
+    static constexpr int Height = 2;
 
     Chunk mBegin = Chunk();
     stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
@@ -84,7 +85,7 @@ public:
                 for(int x = pos.x-1; x <= pos.x+1; ++x) {
                     Cell *cell = static_cast<Cell*>(mField.at({x,y}));
 
-                    if(x<0 || y<0 || x > Chunk::Width - 1 || y > Chunk::Height - 1)
+                    if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
                         continue;
                     else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
 //                        delete cell;
@@ -116,7 +117,7 @@ public:
 
                     Cell *cell = static_cast<Cell*>(mField.at({x,y}));
 
-                    if(x<0 || y<0 || x > Chunk::Width - 1 || y > Chunk::Height - 1)
+                    if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
                         continue;
                     else if(x == pos.x && y == pos.y)
                         continue;
@@ -131,16 +132,19 @@ public:
             return curcell;
         };
 
+        mBombsPositions.clear();
         for(auto &ichunk : mField.cache().chunksTable()) {
             Chunk *chunk = static_cast<Chunk*>(ichunk.mChunkRec.mChunk);
-            mBombsPositions.insert(mBombsPositions.end(), chunk->mBombsPositions.begin(), chunk->mBombsPositions.end());
+//            mBombsPositions.insert(mBombsPositions.end(), chunk->mBombsPositions.begin(), chunk->mBombsPositions.end());
+            for(auto &bombcell : chunk->mBombsPositions)
+                mBombsPositions.push_back(ichunk.mChunkRec.mPos * stf::Vec2d{Chunk::Width, Chunk::Height} + bombcell);
         }
 
         for(auto &pos : mBombsPositions) {
-            checkAroundForBombs(pos);
+//            checkAroundForBombs(pos);
             static_cast<Chunk*>(mField[pos])->initialise() = true;
         }
-        activate(cursor);
+//        activate(cursor);
 //        mIsInitialised = true;
     }
 };

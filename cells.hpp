@@ -28,8 +28,8 @@ public:
 
     virtual uint8_t view() const
     {
-        return mIsActivated ? mView : '-';
-//        return mView;
+//        return mIsActivated ? mView : '-';
+        return mView;
     }
 
     virtual int uniqueIntView() const
