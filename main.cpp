@@ -50,6 +50,16 @@ public:
     }
 };
 
+class BombsNeighborCell : public Cell
+{
+public:
+    BombsNeighborCell(const uint8_t bombs, const stf::ColorTable color)
+    {
+        mView = bombs;
+        mColor = color;
+    }
+};
+
 class Chunk : public stf::sdb::IChunk
 {
 public:
