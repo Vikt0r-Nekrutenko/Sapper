@@ -41,6 +41,15 @@ protected:
     stf::ColorTable mColor = stf::ColorTable::Default;
 };
 
+class EmptyCell : public Cell
+{
+public:
+    EmptyCell()
+    {
+        mView = '.';
+    }
+};
+
 class Chunk : public stf::sdb::IChunk
 {
 public:
@@ -53,6 +62,9 @@ public:
         for(auto &cell : mArray) {
             cell = new Cell;
         }
+
+        delete mArray.at(0);
+        mArray.at(0) = new EmptyCell;
     }
 
     stf::sdb::IChunk *getNew() override
