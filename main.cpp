@@ -102,6 +102,11 @@ public:
     GameField mField = GameField();
     stf::Vec2d mCursor { Chunk::Width >> 1, Chunk::Height >> 1 };
 
+    GameModel()
+    {
+        mField.put({0,0}, new BombsNeighborCell('1',stf::ColorTable::Cyan));
+    }
+
     stf::smv::IView *put(stf::smv::IView *sender)
     {
         return sender;
