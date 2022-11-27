@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <iview.hpp>
+#include <random.hpp>
 #include "window.hpp"
 #include "imodel.hpp"
 #include "chunkedmap.hpp"
@@ -78,6 +79,28 @@ public:
     {
         return new Chunk;
     }
+
+    void init()
+    {
+        int bombs = 10;
+        do {
+            for(int i = 0; i < Width * Height; ++i) {
+                if(stf::Random().getNum(0, 100) < 10) {
+                    delete at({ i % Width, i / Width });
+                    put({ i % Width, i / Width }, new BombsNeighborCell('1', stf::ColorTable::Cyan));
+                    --bombs;
+                }
+            }
+        } while(bombs);
+        mIsInitialised = true;
+    }
+
+protected:
+
+    std::vector<stf::Vec2d> mBombs;
+    std::vector<stf::Vec2d> mBombsNeighbors;
+    std::vector<stf::Vec2d> mEmptys;
+    bool mIsInitialised = false;
 };
 
 class GameField
