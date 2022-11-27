@@ -49,7 +49,7 @@ public:
             return curcell;
         };
 
-        int bombs = 10;
+        int bombs = 5;
         std::vector<stf::Vec2d> bombsPos;
         do {
             for(int i = 0; i < Width * Height; ++i) {
@@ -81,7 +81,6 @@ public:
         }
 
         auto checkAround = [&](const stf::Vec2d &pos) {
-            Cell *curcell = static_cast<Cell*>(at(pos));
 
             for(int y = pos.y-1; y <= pos.y+1; ++y) {
                 for(int x = pos.x-1; x <= pos.x+1; ++x) {
@@ -89,27 +88,20 @@ public:
 
                     if(x<0 || y<0 || x > Chunk::Width - 1 || y > Chunk::Height - 1)
                         continue;
-                    else if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
-                        cell->activate();
-//                        continue;
+                    else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+                        delete cell;
+                        put({x,y}, new EmptyCell);
+                        emptyCells.push_back({x,y});
+                        static_cast<Cell*>(at({x,y}))->activate();
                     }
-                    else //if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-                        if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-                            delete cell;
-                            put({x,y}, new EmptyCell);
-                            emptyCells.push_back({x,y});
-                            static_cast<Cell*>(at({x,y}))->activate();
-                        }
-//                    }
                 }
             }
         };
-//        static_cast<Cell*>(at(cursor))->activate();
+
         emptyCells.push_back(cursor);
 
         for(auto pos : emptyCells) {
             checkAround(pos);
-//            emptyCells.pop_front();
         }
     }
 

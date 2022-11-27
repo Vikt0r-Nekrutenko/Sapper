@@ -22,7 +22,7 @@ public:
             static_cast<Chunk*>(mField.mField[mCursor])->init(mCursor);
         } else {
             static_cast<Chunk*>(mField.mField[mCursor])->activate(mCursor);
-//            static_cast<Cell*>(mField.mField.at(mCursor))->activate();
+            static_cast<Cell*>(mField.mField.at(mCursor))->activate();
         }
         return sender;
     }
