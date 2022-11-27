@@ -28,8 +28,7 @@ public:
 
     virtual uint8_t view() const
     {
-//        return mView;
-        return mIsActivated ? mView : '-';
+        return mView;
     }
 
     virtual int uniqueIntView() const
@@ -57,11 +56,9 @@ public:
         return mIsActivated = true;
     }
 
-    virtual Cell *activate(Chunk &chunk);
-
 protected:
 
-    int mBombsAround = -2;
+    int mBombsAround = 0;
     bool mIsActivated = false;
     uint8_t mView = '-';
     stf::ColorTable mColor = stf::ColorTable::Default;
@@ -73,7 +70,6 @@ public:
     EmptyCell()
     {
         mView = '.';
-        mBombsAround = -3;
     }
 
     int uniqueIntView() const override
@@ -88,7 +84,11 @@ public:
     BombCell()
     {
         mView = 'o';
-        mBombsAround = 0;
+    }
+
+    int uniqueIntView() const
+    {
+        return 2;
     }
 };
 
@@ -98,17 +98,16 @@ public:
     BombsNeighborCell()
     {
         mColor = stf::ColorTable::Red;
-        mBombsAround = 1;
-    }
-
-    uint8_t view() const override
-    {
-        return mIsActivated ? '0' + mBombsAround : '-';
     }
 
     int uniqueIntView() const override
     {
-        return 2;
+        return 3;
+    }
+
+    uint8_t view() const override
+    {
+        return '0' + mBombsAround;
     }
 };
 
