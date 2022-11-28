@@ -9,6 +9,8 @@ class Chunk;
 class Cell : public stf::sdb::ICell
 {
 public:
+    static const uint8_t UninitialisedCellView = '+';
+
     size_t sizeOfSelf() const override
     {
         return sizeof(mView) + sizeof(mColor);
@@ -28,7 +30,7 @@ public:
 
     virtual uint8_t view() const
     {
-        return mIsActivated ? mView : '+';
+        return mIsActivated ? mView : UninitialisedCellView;
     }
 
     virtual int uniqueIntView() const
@@ -70,7 +72,7 @@ protected:
 
     int mBombsAround = 0;
     bool mIsActivated = false;
-    uint8_t mView = '+';
+    uint8_t mView = UninitialisedCellView;
     stf::ColorTable mColor = stf::ColorTable::Default;
 };
 
@@ -112,7 +114,7 @@ public:
 
     uint8_t view() const override
     {
-        return mIsActivated ? '0' + mBombsAround : '-';
+        return mIsActivated ? '0' + mBombsAround : UninitialisedCellView;
     }
 };
 
