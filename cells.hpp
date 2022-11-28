@@ -28,8 +28,7 @@ public:
 
     virtual uint8_t view() const
     {
-//        return mIsActivated ? mView : '-';
-        return mView;
+        return mIsActivated ? mView : '+';
     }
 
     virtual int uniqueIntView() const
@@ -39,7 +38,7 @@ public:
 
     virtual stf::ColorTable color() const
     {
-        return mColor;
+        return mIsActivated ? mColor : stf::ColorTable::Default;
     }
 
     int bombsAround() const
@@ -47,9 +46,19 @@ public:
         return mBombsAround;
     }
 
-    int& bombsAround()
+    void bombsAround(int value)
     {
-        return mBombsAround;
+        mBombsAround = value;
+        switch (mBombsAround) {
+            case 1: mColor = stf::ColorTable::Cyan; break;
+            case 2: mColor = stf::ColorTable::Green; break;
+            case 3: mColor = stf::ColorTable::Red; break;
+            case 4: mColor = stf::ColorTable::Blue; break;
+            case 5: mColor = stf::ColorTable::Yellow; break;
+            case 6: mColor = stf::ColorTable::Magenta; break;
+            case 7: mColor = stf::ColorTable::Default; break;
+            case 8: mColor = stf::ColorTable::White; break;
+        }
     }
 
     bool activate()
@@ -61,7 +70,7 @@ protected:
 
     int mBombsAround = 0;
     bool mIsActivated = false;
-    uint8_t mView = '-';
+    uint8_t mView = '+';
     stf::ColorTable mColor = stf::ColorTable::Default;
 };
 
@@ -70,7 +79,7 @@ class EmptyCell : public Cell
 public:
     EmptyCell()
     {
-        mView = '#';
+        mView = '-';
     }
 
     int uniqueIntView() const override
@@ -96,11 +105,6 @@ public:
 class BombsNeighborCell : public Cell
 {
 public:
-    BombsNeighborCell()
-    {
-        mColor = stf::ColorTable::Red;
-    }
-
     int uniqueIntView() const override
     {
         return 3;
@@ -109,7 +113,6 @@ public:
     uint8_t view() const override
     {
         return mIsActivated ? '0' + mBombsAround : '-';
-//                '0' + mBombsAround;
     }
 };
 

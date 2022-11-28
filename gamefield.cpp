@@ -102,7 +102,7 @@ void GameField::putBombMarkers(const stf::Vec2d &pos)
                 put({x,y}, new BombsNeighborCell());
                 cell = static_cast<Cell*>(mField.at({x,y}));
 
-                cell->bombsAround() = calculateBombsAround({x,y});
+                cell->bombsAround(calculateBombsAround({x,y}));
             }
         }
     }
