@@ -5,6 +5,7 @@ CONFIG -= qt
 
 SOURCES += \
         cells.cpp \
+        chunks.cpp \
         gamefield.cpp \
         main.cpp
 
@@ -21,4 +22,5 @@ DEPENDPATH += $$PWD/../stf \
 
 HEADERS += \
     cells.hpp \
+    chunks.hpp \
     gamefield.hpp
