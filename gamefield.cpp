@@ -6,21 +6,7 @@ Cell *GameField::put(const stf::Vec2d &pos, Cell *cell)
     return static_cast<Cell*>(mField[pos]->put(pos, cell));
 }
 
-void GameField::update()
-{
-    mBombsPositions.clear();
-    for(auto &rec : mField.cache().chunksTable()) {
-        if(!static_cast<Chunk*>(rec.mChunkRec.mChunk)->isInitialised()) {
-            Chunk *chunk = static_cast<Chunk*>(rec.mChunkRec.mChunk);
-            for(auto &bombcell : chunk->mBombsPositions)
-                if(!chunk->isInitialised())
-                    putBombMarkers(rec.mChunkRec.mPos * stf::Vec2d{Chunk::Width, Chunk::Height} + bombcell);
-            static_cast<Chunk*>(rec.mChunkRec.mChunk)->initialise();
-        }
-    }
-}
-
-void GameField::activate(const stf::Vec2d cursor)
+void GameField::onClick(const stf::Vec2d &cursor)
 {
     std::list<stf::Vec2d> emptyCells;
 
@@ -29,74 +15,61 @@ void GameField::activate(const stf::Vec2d cursor)
         cell->activate();
         return;
     }
+    if(cell->uniqueIntView() == BombCell().uniqueIntView()) {
+        cell->activate();
+        return;
+    }
 
     emptyCells.push_back(cursor);
 
     for(auto pos : emptyCells) {
-        activateCells(pos, emptyCells);
-    }
-}
+        for(int y = pos.y-1; y <= pos.y+1; ++y) {
+            for(int x = pos.x-1; x <= pos.x+1; ++x) {
 
-void GameField::activateCells(const stf::Vec2d &pos, std::list<stf::Vec2d> &emptyCells)
-{
-    for(int y = pos.y-1; y <= pos.y+1; ++y) {
-        for(int x = pos.x-1; x <= pos.x+1; ++x) {
-            Cell *cell = static_cast<Cell*>(mField.at({x,y}));
+                Cell *cell = static_cast<Cell*>(mField.at({x,y}));
 
-            if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
-                continue;
+                if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
+                    continue;
 
-            else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-                put({x,y}, new EmptyCell);
-                emptyCells.push_back({x,y});
-                static_cast<Cell*>(mField.at({x,y}))->activate();
-            }
+                if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+                    bool isBombsAroundExist = false;
 
-            else if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
-                cell->activate();
-            }
-        }
-    }
-}
+                    for(int by = pos.y - 1; by <= pos.y + 1; ++by) {
+                        for(int bx = pos.x - 1; bx <= pos.x + 1; ++bx) {
+                            auto cell = static_cast<Cell*>(mField.at({bx,by}));
+                            if(bx<0 || by<0 || bx > Width * Chunk::Width - 1 || by > Height * Chunk::Height - 1)
+                                continue;
 
-int GameField::calculateBombsAround(const stf::Vec2d &pos)
-{
-    int bombCount = 0;
-    for(int y = pos.y - 1; y <= pos.y + 1; ++y) {
-        for(int x = pos.x - 1; x <= pos.x + 1; ++x) {
-            Cell *neighbor = static_cast<Cell*>(mField.at({x,y}));
+                            if(cell->uniqueIntView() == BombCell().uniqueIntView())
+                                isBombsAroundExist = true;
+                        }
+                    }
 
-            if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
-                continue;
+                    if(!isBombsAroundExist) {
+                        put({x,y}, new EmptyCell);
+                        emptyCells.push_back({x,y});
+                        static_cast<Cell*>(mField.at({x,y}))->activate();
+                    }
+                }
+                else if(cell->uniqueIntView() == BombCell().uniqueIntView()) {
+                    put(pos, new BombsNeighborCell());
+                    cell = static_cast<Cell*>(mField.at(pos));
+                    cell->activate();
 
-            else if(x == pos.x && y == pos.y)
-                continue;
+                    int bombCount = 0;
+                    for(int by = pos.y - 1; by <= pos.y + 1; ++by) {
+                        for(int bx = pos.x - 1; bx <= pos.x + 1; ++bx) {
+                            Cell *neighbor = static_cast<Cell*>(mField.at({bx,by}));
 
-            else if(neighbor->uniqueIntView() == BombCell().uniqueIntView())
-                ++bombCount;
-        }
-    }
-    return bombCount;
-}
+                            if(bx<0 || by<0 || bx > Width * Chunk::Width - 1 || by > Height * Chunk::Height - 1)
+                                continue;
 
-void GameField::putBombMarkers(const stf::Vec2d &pos)
-{
-    for(int y = pos.y-1; y <= pos.y+1; ++y) {
-        for(int x = pos.x-1; x <= pos.x+1; ++x) {
-
-            Cell *cell = static_cast<Cell*>(mField.at({x,y}));
-
-            if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
-                continue;
-
-            else if(x == pos.x && y == pos.y)
-                continue;
-
-            else if(cell->uniqueIntView() != BombCell().uniqueIntView()) {
-                put({x,y}, new BombsNeighborCell());
-                cell = static_cast<Cell*>(mField.at({x,y}));
-
-                cell->bombsAround(calculateBombsAround({x,y}));
+                            if(neighbor->uniqueIntView() == BombCell().uniqueIntView())
+                                ++bombCount;
+                        }
+                    }
+                    cell->bombsAround(cell->bombsAround() + bombCount);
+                }
             }
         }
     }

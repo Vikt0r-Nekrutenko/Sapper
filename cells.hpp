@@ -168,8 +168,8 @@ public:
 
     uint8_t view() const override
     {
-//        return mIsActivated ? '0' + mBombsAround : UninitialisedCellView;
-        return mView;
+        return mIsActivated ? '0' + mBombsAround : UninitialisedCellView;
+//        return mView;
     }
 
     void* operator new(size_t size)

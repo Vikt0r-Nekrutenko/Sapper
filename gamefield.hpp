@@ -104,15 +104,11 @@ public:
     stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
     std::vector<stf::Vec2d> mBombsPositions;
 
-    void update();
-    void activate(const stf::Vec2d cursor);
+    void onClick(const stf::Vec2d &cursor);
 
 private:
 
     Cell* put(const stf::Vec2d &pos, Cell* cell);
-    int calculateBombsAround(const stf::Vec2d &pos);
-    void activateCells(const stf::Vec2d &pos, std::list<stf::Vec2d> &emptyCells);
-    void putBombMarkers(const stf::Vec2d &pos);
 };
 
 

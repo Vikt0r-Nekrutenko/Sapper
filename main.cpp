@@ -18,8 +18,9 @@ public:
 
     stf::smv::IView *put(stf::smv::IView *sender)
     {
-        mField.update();
-        mField.activate(mCursor);
+//        mField.update();
+//        mField.activate(mCursor);
+        mField.onClick(mCursor);
         return sender;
     }
 
@@ -172,6 +173,6 @@ public:
 
 int main()
 {
-    srand(clock());
+//    srand(clock());
     return Game().run();
 }
