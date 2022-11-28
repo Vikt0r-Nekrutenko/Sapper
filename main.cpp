@@ -98,7 +98,42 @@ public:
                 }
             }
         }
+        showConsole(renderer, *GM);
+    }
 
+    void showConsole(stf::Renderer &renderer, GameModel &GM)
+    {
+        renderer.draw({40, 2}, "Selectable: X[%d]:Y[%d]", GM.mCursor.x, GM.mCursor.y);
+
+        renderer.draw({40,5}, "New/Del OP : [%d] [%d]", (int)GM.mField.mField.cache().newOperationsCount(), (int)GM.mField.mField.cache().deleteOperationsCount());
+        renderer.draw({40,6}, "Load/Save  : [%d] [%d]", (int)GM.mField.mField.cache().loadCount(), (int)GM.mField.mField.cache().saveCount());
+        renderer.draw({40,7}, "Chunks     : %d", (int)GM.mField.mField.cache().cacheSize());
+        renderer.draw({40,8}, "Memory     : %fkb", (float)GM.mField.mField.cache().memUsage()/1'000.f);
+
+        renderer.draw({40,10}, "Load T          : %dmicS", GM.mField.mField.cache().loadTime());
+
+        renderer.draw({40, 12}, "Misses : %d", (int)GM.mField.mField.cache().cacheMisses());
+        renderer.draw({40, 13}, "Hits   : %d", (int)GM.mField.mField.cache().cacheHits());
+        renderer.draw({40, 14}, "M&S    : %d", (int)GM.mField.mField.cache().cacheCalls());
+        renderer.draw({40, 15}, "M/S    : %d", (int)GM.mField.mField.cache().cacheHits() / ((int)GM.mField.mField.cache().cacheMisses() ? (int)GM.mField.mField.cache().cacheMisses() : 1));
+
+//        renderer.draw({40, 17}, "Star   NEW/DEL : [%d] [%d]", Entity::StarNewCount, Entity::StarDelCount);
+//        renderer.draw({40, 18}, "Bubble NEW/DEL : [%d] [%d]", Entity::BubbleNewCount, Entity::BubbleDelCount);
+//        renderer.draw({40, 19}, "Entity NEW/DEL : [%d] [%d]", Entity::EntityNewCount - Entity::StarNewCount - Entity::BubbleNewCount,
+//                                                              Entity::EntityDelCount - Entity::StarDelCount - Entity::BubbleDelCount);
+
+        int y = 21;
+        int x = 40;
+        for(auto &chunk : GM.mField.mField.cache().chunksTable()) {
+            renderer.draw({x, y++}, "%d (%d) [%d]=[%d]---%d:%d",
+                          y - 21,
+                          chunk.mIsActive,
+                          chunk.mLifeTime,
+                          chunk.mHits - chunk.mCalls,
+                          chunk.mChunkRec.mPos.x,
+                          chunk.mChunkRec.mPos.y);
+
+        }
     }
 };
 
