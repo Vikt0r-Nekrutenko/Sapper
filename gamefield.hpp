@@ -85,12 +85,13 @@ public:
 
                 if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
                     continue;
+
                 else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-//                        delete cell;
                     put({x,y}, new EmptyCell);
                     emptyCells.push_back({x,y});
                     static_cast<Cell*>(mField.at({x,y}))->activate();
                 }
+
                 else if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
                     cell->activate();
                 }
