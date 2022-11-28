@@ -11,6 +11,9 @@ class Cell : public stf::sdb::ICell
 public:
     static const uint8_t UninitialisedCellView = '+';
 
+    Cell() = default;
+    Cell(Cell &cell) = default;
+
     size_t sizeOfSelf() const override
     {
         return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mBombsAround);
@@ -20,7 +23,7 @@ public:
     {
         fwrite(&mView, sizeof(mView), 1, file);
         fwrite(&mColor, sizeof(mColor), 1, file);
-        fwrite(&mIsActivated, sizeof(mIsActivated), 1, file);
+//        fwrite(&mIsActivated, sizeof(mIsActivated), 1, file);
         fwrite(&mBombsAround, sizeof(mBombsAround), 1, file);
     }
 
@@ -28,7 +31,7 @@ public:
     {
         fread(&mView, sizeof(mView), 1, file);
         fread(&mColor, sizeof(mColor), 1, file);
-        fread(&mIsActivated, sizeof(mIsActivated), 1, file);
+//        fread(&mIsActivated, sizeof(mIsActivated), 1, file);
         fread(&mBombsAround, sizeof(mBombsAround), 1, file);
     }
 

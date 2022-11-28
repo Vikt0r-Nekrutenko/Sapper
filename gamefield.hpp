@@ -1,7 +1,6 @@
 #ifndef GAMEFIELD_HPP
 #define GAMEFIELD_HPP
 
-#include <cstdio>
 #include "cells.hpp"
 #include "chunkedmap.hpp"
 
@@ -18,11 +17,6 @@ public:
         mArray.resize(Width * Height);
         for(auto &cell : mArray) {
             cell = new Cell;
-        }
-        FILE *f = fopen("sapper.schnks", "rb");
-        if(f != 0) {
-            fclose(f);
-            return;
         }
 
         int bombs = BombsPerChunk;
@@ -54,9 +48,24 @@ public:
         mIsInitialised = true;
     }
 
+    stf::sdb::IChunk &load(FILE *file) override
+    {
+        stf::sdb::IChunk::load(file);
+
+        for(size_t i = 0; i < mArray.size(); ++i) {
+            switch (static_cast<Cell*>(mArray[i])->uniqueIntView()) {
+            case 1: delete mArray[i]; mArray[i] = new EmptyCell(*static_cast<EmptyCell *>(mArray[i])); break;
+            case 2: delete mArray[i]; mArray[i] = new BombCell(*static_cast<BombCell *>(mArray[i])); break;
+            case 3: delete mArray[i]; mArray[i] = new BombsNeighborCell(*static_cast<BombsNeighborCell *>(mArray[i])); break;
+            }
+        }
+        return *dynamic_cast<stf::sdb::IChunk*>(this);
+    }
+
 protected:
 
     bool mIsInitialised = false;
+
 };
 
 class GameField
