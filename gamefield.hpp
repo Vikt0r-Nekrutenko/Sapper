@@ -68,7 +68,7 @@ public:
 private:
 
     Cell* put(const stf::Vec2d &pos, Cell* cell);
-    int calculateBombsAround(const int x, const int y);
+    int calculateBombsAround(const stf::Vec2d &pos);
     void activateCells(const stf::Vec2d &pos, std::list<stf::Vec2d> &emptyCells);
     void putBombMarkers(const stf::Vec2d &pos);
     void initChunks();

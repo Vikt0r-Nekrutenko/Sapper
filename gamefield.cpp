@@ -54,16 +54,19 @@ void GameField::activate(const stf::Vec2d cursor)
     }
 }
 
-int GameField::calculateBombsAround(const int x, const int y)
+int GameField::calculateBombsAround(const stf::Vec2d &pos)
 {
     int mineCount = 0;
-    for(int ny = y-1; ny <= y+1; ++ny) {
-        for(int nx = x-1; nx <= x+1; ++nx) {
+    for(int ny = pos.y - 1; ny <= pos.y + 1; ++ny) {
+        for(int nx = pos.x - 1; nx <= pos.x + 1; ++nx) {
             Cell *neighbor = static_cast<Cell*>(mField.at({nx,ny}));
+
             if(nx<0 || ny<0 || nx > Width * Chunk::Width - 1 || ny > Height * Chunk::Height - 1)
                 continue;
-            if(nx == x && ny == y)
+
+            if(nx == pos.x && ny == pos.y)
                 continue;
+
             if(neighbor->uniqueIntView() == BombCell().uniqueIntView())
                 ++mineCount;
         }
@@ -88,7 +91,7 @@ void GameField::putBombMarkers(const stf::Vec2d &pos)
                 put({x,y}, new BombsNeighborCell());
                 cell = static_cast<Cell*>(mField.at({x,y}));
 
-                cell->bombsAround() = calculateBombsAround(x,y);
+                cell->bombsAround() = calculateBombsAround({x,y});
             }
         }
     }
