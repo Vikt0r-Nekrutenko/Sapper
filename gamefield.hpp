@@ -69,11 +69,11 @@ public:
         return static_cast<Cell*>(mField[pos]->put(pos, cell));
     }
 
-    void update(const stf::Vec2d &cursor)
+    void update()
     {
         for(auto &rec : mField.cache().chunksTable()) {
             if(!static_cast<Chunk*>(rec.mChunkRec.mChunk)->isInitialised())
-                init(rec.mChunkRec.mPos);
+                initChunks();
         }
     }
 
@@ -156,7 +156,7 @@ public:
 
     }
 
-    void init(const stf::Vec2d &cursor)
+    void initChunks()
     {
         mBombsPositions.clear();
         for(auto &ichunk : mField.cache().chunksTable()) {

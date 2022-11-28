@@ -18,7 +18,7 @@ public:
 
     stf::smv::IView *put(stf::smv::IView *sender)
     {
-        mField.update(mCursor);
+        mField.update();
         mField.activate(mCursor);
         return sender;
     }
@@ -58,7 +58,7 @@ public:
             return put(sender);
         }
 
-        mField.update(mCursor);
+        mField.update();
         return sender;
     }
 
