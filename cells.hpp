@@ -13,19 +13,23 @@ public:
 
     size_t sizeOfSelf() const override
     {
-        return sizeof(mView) + sizeof(mColor);
+        return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mBombsAround);
     }
 
     void save(FILE *file) override
     {
         fwrite(&mView, sizeof(mView), 1, file);
         fwrite(&mColor, sizeof(mColor), 1, file);
+        fwrite(&mIsActivated, sizeof(mIsActivated), 1, file);
+        fwrite(&mBombsAround, sizeof(mBombsAround), 1, file);
     }
 
     void load(FILE *file) override
     {
         fread(&mView, sizeof(mView), 1, file);
         fread(&mColor, sizeof(mColor), 1, file);
+        fread(&mIsActivated, sizeof(mIsActivated), 1, file);
+        fread(&mBombsAround, sizeof(mBombsAround), 1, file);
     }
 
     virtual uint8_t view() const
