@@ -10,6 +10,7 @@ class Chunk : public stf::sdb::IChunk
 public:
     static constexpr int Width  = 9;
     static constexpr int Height = 9;
+    static constexpr int BombsPerChunk = 10;
     std::vector<stf::Vec2d> mBombsPositions;
 
     Chunk() : stf::sdb::IChunk({Width, Height})
@@ -19,7 +20,7 @@ public:
             cell = new Cell;
         }
 
-        int bombs = 10;
+        int bombs = BombsPerChunk;
         do {
             for(int i = 0; i < Width * Height; ++i) {
                 const stf::Vec2d pos { i % Width, i / Width };
