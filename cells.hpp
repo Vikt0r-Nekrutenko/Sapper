@@ -26,83 +26,20 @@ public:
     static size_t mNCellNewCount;
     static size_t mNCellDelCount;
 
-    void* operator new(size_t size)
-    {
-        void *ptr = std::malloc(size);
-        ++mCellNewCount;
-        return ptr;
-    }
+    void* operator new(size_t size);
+    void operator delete(void *ptr);
 
-    void operator delete(void *ptr)
-    {
-        ++mCellDelCount;
-        std::free(ptr);
-    }
+    void save(FILE *file) override;
+    void load(FILE *file) override;
 
-    size_t sizeOfSelf() const override
-    {
-        return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mBombsAround) + sizeof(mUniqueView);
-    }
+    virtual uint8_t view() const;
+    virtual int uniqueIntView() const;
+    virtual stf::ColorTable color() const;
 
-    void save(FILE *file) override
-    {
-        fwrite(&mView, sizeof(mView), 1, file);
-        fwrite(&mColor, sizeof(mColor), 1, file);
-        fwrite(&mIsActivated, sizeof(mIsActivated), 1, file);
-        fwrite(&mBombsAround, sizeof(mBombsAround), 1, file);
-        fwrite(&mUniqueView, sizeof(mUniqueView), 1, file);
-    }
-
-    void load(FILE *file) override
-    {
-        fread(&mView, sizeof(mView), 1, file);
-        fread(&mColor, sizeof(mColor), 1, file);
-        fread(&mIsActivated, sizeof(mIsActivated), 1, file);
-        fread(&mBombsAround, sizeof(mBombsAround), 1, file);
-        fread(&mUniqueView, sizeof(mUniqueView), 1, file);
-    }
-
-    virtual uint8_t view() const
-    {
-//        return mIsActivated ? mView : UninitialisedCellView;
-        return mView;
-    }
-
-    virtual int uniqueIntView() const
-    {
-        return mUniqueView;
-    }
-
-    virtual stf::ColorTable color() const
-    {
-        return mIsActivated ? mColor : stf::ColorTable::Default;
-    }
-
-    int bombsAround() const
-    {
-        return mBombsAround;
-    }
-
-    void bombsAround(int value)
-    {
-        mBombsAround = value;
-        switch (mBombsAround) {
-            case 1: mColor = stf::ColorTable::Cyan; break;
-            case 2: mColor = stf::ColorTable::Green; break;
-            case 3: mColor = stf::ColorTable::Red; break;
-            case 4: mColor = stf::ColorTable::Blue; break;
-            case 5: mColor = stf::ColorTable::Yellow; break;
-            case 6: mColor = stf::ColorTable::Magenta; break;
-            case 7: mColor = stf::ColorTable::Default; break;
-            case 8: mColor = stf::ColorTable::White; break;
-        }
-    }
-
-    Cell *activate()
-    {
-        mIsActivated = true;
-        return this;
-    }
+    Cell *activate();
+    int bombsAround() const;
+    void bombsAround(int value);
+    size_t sizeOfSelf() const override;
 
 protected:
 
@@ -116,80 +53,32 @@ protected:
 class EmptyCell : public Cell
 {
 public:
-    EmptyCell()
-    {
-        mView = '-';
-        mUniqueView = 1;
-    }
+    EmptyCell();
 
-    void* operator new(size_t size)
-    {
-        void *ptr = std::malloc(size);
-        ++mECellNewCount;
-        return ptr;
-    }
-
-    void operator delete(void *ptr)
-    {
-        ++mECellDelCount;
-        std::free(ptr);
-    }
+    void* operator new(size_t size);
+    void operator delete(void *ptr);
 };
 
 class BombCell : public Cell
 {
 public:
-    BombCell()
-    {
-        mView = 'o';
-        mUniqueView = 2;
-    }
+    BombCell();
 
-    stf::ColorTable color() const override
-    {
-        return mIsActivated ? mColor : stf::ColorTable::Magenta;
-    }
+    stf::ColorTable color() const override;
 
-    void* operator new(size_t size)
-    {
-        void *ptr = std::malloc(size);
-        ++mBCellNewCount;
-        return ptr;
-    }
-
-    void operator delete(void *ptr)
-    {
-        ++mBCellDelCount;
-        std::free(ptr);
-    }
+    void* operator new(size_t size);
+    void operator delete(void *ptr);
 };
 
 class BombsNeighborCell : public Cell
 {
 public:
-    BombsNeighborCell()
-    {
-        mUniqueView = 3;
-    }
+    BombsNeighborCell();
 
-    uint8_t view() const override
-    {
-        return mIsActivated ? '0' + mBombsAround : UninitialisedCellView;
-//        return mView;
-    }
+    uint8_t view() const override;
 
-    void* operator new(size_t size)
-    {
-        void *ptr = std::malloc(size);
-        ++mNCellNewCount;
-        return ptr;
-    }
-
-    void operator delete(void *ptr)
-    {
-        ++mNCellDelCount;
-        std::free(ptr);
-    }
+    void* operator new(size_t size);
+    void operator delete(void *ptr);
 };
 
 #endif // CELLS_HPP
