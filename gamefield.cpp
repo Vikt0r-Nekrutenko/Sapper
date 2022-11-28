@@ -57,17 +57,17 @@ void GameField::activate(const stf::Vec2d cursor)
 int GameField::calculateBombsAround(const stf::Vec2d &pos)
 {
     int mineCount = 0;
-    for(int ny = pos.y - 1; ny <= pos.y + 1; ++ny) {
-        for(int nx = pos.x - 1; nx <= pos.x + 1; ++nx) {
-            Cell *neighbor = static_cast<Cell*>(mField.at({nx,ny}));
+    for(int y = pos.y - 1; y <= pos.y + 1; ++y) {
+        for(int x = pos.x - 1; x <= pos.x + 1; ++x) {
+            Cell *neighbor = static_cast<Cell*>(mField.at({x,y}));
 
-            if(nx<0 || ny<0 || nx > Width * Chunk::Width - 1 || ny > Height * Chunk::Height - 1)
+            if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
                 continue;
 
-            if(nx == pos.x && ny == pos.y)
+            else if(x == pos.x && y == pos.y)
                 continue;
 
-            if(neighbor->uniqueIntView() == BombCell().uniqueIntView())
+            else if(neighbor->uniqueIntView() == BombCell().uniqueIntView())
                 ++mineCount;
         }
     }
