@@ -58,8 +58,6 @@ public:
         case ' ':
             return put(sender);
         }
-
-//        mField.update();
         return sender;
     }
 
