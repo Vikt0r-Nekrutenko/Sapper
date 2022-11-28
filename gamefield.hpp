@@ -54,9 +54,24 @@ public:
 
         for(size_t i = 0; i < mArray.size(); ++i) {
             switch (static_cast<Cell*>(mArray[i])->uniqueIntView()) {
-            case 1: delete mArray[i]; mArray[i] = new EmptyCell(*static_cast<EmptyCell *>(mArray[i])); break;
-            case 2: delete mArray[i]; mArray[i] = new BombCell(*static_cast<BombCell *>(mArray[i])); break;
-            case 3: delete mArray[i]; mArray[i] = new BombsNeighborCell(*static_cast<BombsNeighborCell *>(mArray[i])); break;
+            case 1: {
+                auto tmp = new EmptyCell(*static_cast<EmptyCell *>(mArray[i]));
+                delete mArray[i];
+                mArray[i] = tmp;
+                break;
+            }
+            case 2: {
+                auto tmp = new BombCell(*static_cast<BombCell *>(mArray[i]));
+                delete mArray[i];
+                mArray[i] = tmp;
+                break;
+            }
+            case 3: {
+                auto tmp = new BombsNeighborCell(*static_cast<BombsNeighborCell *>(mArray[i]));
+                delete mArray[i];
+                mArray[i] = tmp;
+                break;
+            }
             }
         }
         return *dynamic_cast<stf::sdb::IChunk*>(this);

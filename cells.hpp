@@ -16,23 +16,25 @@ public:
 
     size_t sizeOfSelf() const override
     {
-        return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mBombsAround);
+        return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mBombsAround) + sizeof(mUniqueView);
     }
 
     void save(FILE *file) override
     {
         fwrite(&mView, sizeof(mView), 1, file);
         fwrite(&mColor, sizeof(mColor), 1, file);
-//        fwrite(&mIsActivated, sizeof(mIsActivated), 1, file);
+        fwrite(&mIsActivated, sizeof(mIsActivated), 1, file);
         fwrite(&mBombsAround, sizeof(mBombsAround), 1, file);
+        fwrite(&mUniqueView, sizeof(mUniqueView), 1, file);
     }
 
     void load(FILE *file) override
     {
         fread(&mView, sizeof(mView), 1, file);
         fread(&mColor, sizeof(mColor), 1, file);
-//        fread(&mIsActivated, sizeof(mIsActivated), 1, file);
+        fread(&mIsActivated, sizeof(mIsActivated), 1, file);
         fread(&mBombsAround, sizeof(mBombsAround), 1, file);
+        fread(&mUniqueView, sizeof(mUniqueView), 1, file);
     }
 
     virtual uint8_t view() const
@@ -42,7 +44,7 @@ public:
 
     virtual int uniqueIntView() const
     {
-        return 0;
+        return mUniqueView;
     }
 
     virtual stf::ColorTable color() const
@@ -78,6 +80,7 @@ public:
 protected:
 
     int mBombsAround = 0;
+    int mUniqueView = 0;
     bool mIsActivated = false;
     uint8_t mView = UninitialisedCellView;
     stf::ColorTable mColor = stf::ColorTable::Default;
@@ -89,35 +92,24 @@ public:
     EmptyCell()
     {
         mView = '-';
-    }
-
-    int uniqueIntView() const override
-    {
-        return 1;
+        mUniqueView = 1;
     }
 };
 
 class BombCell : public Cell
 {
-public:
+public: 
     BombCell()
     {
         mView = 'o';
-    }
-
-    int uniqueIntView() const override
-    {
-        return 2;
+        mUniqueView = 2;
     }
 };
 
 class BombsNeighborCell : public Cell
 {
 public:
-    int uniqueIntView() const override
-    {
-        return 3;
-    }
+    BombsNeighborCell() { mUniqueView = 3; }
 
     uint8_t view() const override
     {
