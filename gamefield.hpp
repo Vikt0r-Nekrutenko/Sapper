@@ -42,9 +42,9 @@ public:
         return mIsInitialised;
     }
 
-    bool &initialise()
+    void initialise()
     {
-        return mIsInitialised;
+        mIsInitialised = true;
     }
 
 protected:
