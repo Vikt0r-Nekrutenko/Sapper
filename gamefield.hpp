@@ -1,7 +1,7 @@
 #ifndef GAMEFIELD_HPP
 #define GAMEFIELD_HPP
 
-#include <functional>
+#include <cstdio>
 #include "cells.hpp"
 #include "chunkedmap.hpp"
 
@@ -18,6 +18,11 @@ public:
         mArray.resize(Width * Height);
         for(auto &cell : mArray) {
             cell = new Cell;
+        }
+        FILE *f = fopen("sapper.schnks", "rb");
+        if(f != 0) {
+            fclose(f);
+            return;
         }
 
         int bombs = BombsPerChunk;
@@ -61,7 +66,7 @@ public:
     static constexpr int Height = 2;
 
     Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
+    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, false, "sapper.schnks");
     std::vector<stf::Vec2d> mBombsPositions;
 
     void update();
