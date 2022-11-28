@@ -115,6 +115,23 @@ public:
         }
     }
 
+    int calculateBombsAround(const int x, const int y)
+    {
+        int mineCount = 0;
+        for(int ny = y-1; ny <= y+1; ++ny) {
+            for(int nx = x-1; nx <= x+1; ++nx) {
+                Cell *neighbor = static_cast<Cell*>(mField.at({nx,ny}));
+                if(nx<0 || ny<0 || nx > Width * Chunk::Width - 1 || ny > Height * Chunk::Height - 1)
+                    continue;
+                if(nx == x && ny == y)
+                    continue;
+                if(neighbor->uniqueIntView() == BombCell().uniqueIntView())
+                    ++mineCount;
+            }
+        }
+        return mineCount;
+    }
+
     void putBombMarkers(const stf::Vec2d &pos)
     {
         for(int y = pos.y-1; y <= pos.y+1; ++y) {
@@ -132,19 +149,7 @@ public:
                     put({x,y}, new BombsNeighborCell());
                     cell = static_cast<Cell*>(mField.at({x,y}));
 
-                    int mineCount = 0;
-                    for(int ny = y-1; ny <= y+1; ++ny) {
-                        for(int nx = x-1; nx <= x+1; ++nx) {
-                            Cell *neighbor = static_cast<Cell*>(mField.at({nx,ny}));
-                            if(nx<0 || ny<0 || nx > Width * Chunk::Width - 1 || ny > Height * Chunk::Height - 1)
-                                continue;
-                            if(nx == x && ny == y)
-                                continue;
-                            if(neighbor->uniqueIntView() == BombCell().uniqueIntView())
-                                ++mineCount;
-                        }
-                    }
-                    cell->bombsAround() = mineCount;
+                    cell->bombsAround() = calculateBombsAround(x,y);
                 }
             }
         }
