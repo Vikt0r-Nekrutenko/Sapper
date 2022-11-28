@@ -158,7 +158,7 @@ public:
             for(auto &bombcell : chunk->mBombsPositions)
                 if(!chunk->isInitialised())
                     checkAroundForBombs(ichunk.mChunkRec.mPos * stf::Vec2d{Chunk::Width, Chunk::Height} + bombcell);
-            static_cast<Chunk*>(ichunk.mChunkRec.mChunk)->initialise() = true;
+            static_cast<Chunk*>(ichunk.mChunkRec.mChunk)->initialise();
         }
     }
 };
