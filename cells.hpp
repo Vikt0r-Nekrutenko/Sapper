@@ -98,9 +98,10 @@ public:
         }
     }
 
-    bool activate()
+    Cell *activate()
     {
-        return mIsActivated = true;
+        mIsActivated = true;
+        return this;
     }
 
 protected:

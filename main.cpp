@@ -20,7 +20,8 @@ public:
     {
 //        mField.update();
 //        mField.activate(mCursor);
-        mField.onClick(mCursor);
+        if (mField.onClick(mCursor)->uniqueIntView() == BombCell().uniqueIntView())
+            return nullptr;
         return sender;
     }
 
@@ -140,14 +141,14 @@ class Game : public stf::Window
 {
     GameModel mModel = GameModel();
     GameView mView = GameView(&mModel);
+    stf::smv::IView *mCurrentView = &mView;
     bool isContinue = true;
 
 public:
     bool onUpdate(const float dt) override
     {
-        mView.update(dt);
         mView.show(renderer);
-        return isContinue;
+        return mCurrentView == nullptr ? false : isContinue;
     }
 
     void keyEvents(const int key) override
@@ -160,7 +161,7 @@ public:
             break;
         }
 
-        mView.keyEventsHandler(key);
+        mCurrentView = mView.keyEventsHandler(key);
     }
 
     void mouseEvents(const stf::MouseRecord &mr) override
