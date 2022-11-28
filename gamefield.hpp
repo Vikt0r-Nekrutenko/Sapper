@@ -14,23 +14,22 @@ public:
 
     Chunk() : stf::sdb::IChunk({Width, Height})
     {
-        mArray.resize(Width * Height);
-        for(auto &cell : mArray) {
-            cell = new Cell;
-        }
-
+        mArray.resize(Width * Height, nullptr);
         int bombs = BombsPerChunk;
-        do {
-            for(int i = 0; i < Width * Height; ++i) {
-                const stf::Vec2d pos { i % Width, i / Width };
-                if(rand() % 100 < 10 && bombs > 0) {
-                    delete at(pos);
-                    put(pos, new BombCell);
-                    mBombsPositions.push_back(pos);
-                    --bombs;
-                }
+        while(bombs) {
+            stf::Vec2d pos { rand() % Width, rand() % Height };
+            if(at(pos) == nullptr) {
+                put(pos, new BombCell);
+                mBombsPositions.push_back(pos);
             }
-        } while(bombs > 0);
+            else continue;
+            --bombs;
+        }
+        for(auto &cell : mArray) {
+            if(cell == nullptr) {
+                cell = new Cell;
+            }
+        }
     }
 
     stf::sdb::IChunk *getNew() override
@@ -98,11 +97,11 @@ protected:
 class GameField
 {
 public:
-    static constexpr int Width  = 2;
-    static constexpr int Height = 2;
+    static constexpr int Width  = 5;
+    static constexpr int Height = Width;
 
     Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, false, "sapper.schnks");
+    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
     std::vector<stf::Vec2d> mBombsPositions;
 
     void update();
@@ -114,7 +113,6 @@ private:
     int calculateBombsAround(const stf::Vec2d &pos);
     void activateCells(const stf::Vec2d &pos, std::list<stf::Vec2d> &emptyCells);
     void putBombMarkers(const stf::Vec2d &pos);
-    void initChunks();
 };
 
 

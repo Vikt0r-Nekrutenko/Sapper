@@ -81,8 +81,8 @@ public:
         constexpr int halfHeight = Chunk::Height >> 1;
         constexpr int halfWidth  = Chunk::Width  >> 1;
 
-        for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight + 2; ++j, ++y) {
-            for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth+2; ++i, ++x) {
+        for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight; ++j, ++y) {
+            for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth; ++i, ++x) {
                 Chunk *chunk = (Chunk*)GM->mField.mField[{x,y}];
                 if(chunk != nullptr) {
                     Cell *cell = (Cell*)chunk->at({x,y});
@@ -117,10 +117,10 @@ public:
         renderer.draw({40, 14}, "M&S    : %d", (int)GM.mField.mField.cache().cacheCalls());
         renderer.draw({40, 15}, "M/S    : %d", (int)GM.mField.mField.cache().cacheHits() / ((int)GM.mField.mField.cache().cacheMisses() ? (int)GM.mField.mField.cache().cacheMisses() : 1));
 
-//        renderer.draw({40, 17}, "Star   NEW/DEL : [%d] [%d]", Entity::StarNewCount, Entity::StarDelCount);
-//        renderer.draw({40, 18}, "Bubble NEW/DEL : [%d] [%d]", Entity::BubbleNewCount, Entity::BubbleDelCount);
-//        renderer.draw({40, 19}, "Entity NEW/DEL : [%d] [%d]", Entity::EntityNewCount - Entity::StarNewCount - Entity::BubbleNewCount,
-//                                                              Entity::EntityDelCount - Entity::StarDelCount - Entity::BubbleDelCount);
+        renderer.draw({40, 17}, "Empty    NEW/DEL : [%d] [%d]", Cell::mECellNewCount, Cell::mECellDelCount);
+        renderer.draw({40, 18}, "Cell     NEW/DEL : [%d] [%d]", Cell::mCellNewCount, Cell::mCellDelCount);
+        renderer.draw({40, 19}, "Neighbor NEW/DEL : [%d] [%d]", Cell::mNCellNewCount, Cell::mNCellDelCount);
+        renderer.draw({40, 20}, "Bomb     NEW/DEL : [%d] [%d]", Cell::mBCellNewCount, Cell::mBCellDelCount);
 
         int y = 21;
         int x = 40;
@@ -172,5 +172,6 @@ public:
 
 int main()
 {
+    srand(clock());
     return Game().run();
 }

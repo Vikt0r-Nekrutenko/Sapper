@@ -8,9 +8,15 @@ Cell *GameField::put(const stf::Vec2d &pos, Cell *cell)
 
 void GameField::update()
 {
+    mBombsPositions.clear();
     for(auto &rec : mField.cache().chunksTable()) {
-        if(!static_cast<Chunk*>(rec.mChunkRec.mChunk)->isInitialised())
-            initChunks();
+        if(!static_cast<Chunk*>(rec.mChunkRec.mChunk)->isInitialised()) {
+            Chunk *chunk = static_cast<Chunk*>(rec.mChunkRec.mChunk);
+            for(auto &bombcell : chunk->mBombsPositions)
+                if(!chunk->isInitialised())
+                    putBombMarkers(rec.mChunkRec.mPos * stf::Vec2d{Chunk::Width, Chunk::Height} + bombcell);
+            static_cast<Chunk*>(rec.mChunkRec.mChunk)->initialise();
+        }
     }
 }
 
@@ -28,18 +34,6 @@ void GameField::activate(const stf::Vec2d cursor)
 
     for(auto pos : emptyCells) {
         activateCells(pos, emptyCells);
-    }
-}
-
-void GameField::initChunks()
-{
-    mBombsPositions.clear();
-    for(auto &ichunk : mField.cache().chunksTable()) {
-        Chunk *chunk = static_cast<Chunk*>(ichunk.mChunkRec.mChunk);
-        for(auto &bombcell : chunk->mBombsPositions)
-            if(!chunk->isInitialised())
-                putBombMarkers(ichunk.mChunkRec.mPos * stf::Vec2d{Chunk::Width, Chunk::Height} + bombcell);
-        static_cast<Chunk*>(ichunk.mChunkRec.mChunk)->initialise();
     }
 }
 

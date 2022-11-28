@@ -14,6 +14,31 @@ public:
     Cell() = default;
     Cell(Cell &cell) = default;
 
+    static size_t mCellNewCount;
+    static size_t mCellDelCount;
+
+    static size_t mECellNewCount;
+    static size_t mECellDelCount;
+
+    static size_t mBCellNewCount;
+    static size_t mBCellDelCount;
+
+    static size_t mNCellNewCount;
+    static size_t mNCellDelCount;
+
+    void* operator new(size_t size)
+    {
+        void *ptr = std::malloc(size);
+        ++mCellNewCount;
+        return ptr;
+    }
+
+    void operator delete(void *ptr)
+    {
+        ++mCellDelCount;
+        std::free(ptr);
+    }
+
     size_t sizeOfSelf() const override
     {
         return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mBombsAround) + sizeof(mUniqueView);
@@ -39,7 +64,8 @@ public:
 
     virtual uint8_t view() const
     {
-        return mIsActivated ? mView : UninitialisedCellView;
+//        return mIsActivated ? mView : UninitialisedCellView;
+        return mView;
     }
 
     virtual int uniqueIntView() const
@@ -94,15 +120,41 @@ public:
         mView = '-';
         mUniqueView = 1;
     }
+
+    void* operator new(size_t size)
+    {
+        void *ptr = std::malloc(size);
+        ++mECellNewCount;
+        return ptr;
+    }
+
+    void operator delete(void *ptr)
+    {
+        ++mECellDelCount;
+        std::free(ptr);
+    }
 };
 
 class BombCell : public Cell
 {
-public: 
+public:
     BombCell()
     {
         mView = 'o';
         mUniqueView = 2;
+    }
+
+    void* operator new(size_t size)
+    {
+        void *ptr = std::malloc(size);
+        ++mBCellNewCount;
+        return ptr;
+    }
+
+    void operator delete(void *ptr)
+    {
+        ++mBCellDelCount;
+        std::free(ptr);
     }
 };
 
@@ -116,7 +168,21 @@ public:
 
     uint8_t view() const override
     {
-        return mIsActivated ? '0' + mBombsAround : UninitialisedCellView;
+//        return mIsActivated ? '0' + mBombsAround : UninitialisedCellView;
+        return mView;
+    }
+
+    void* operator new(size_t size)
+    {
+        void *ptr = std::malloc(size);
+        ++mNCellNewCount;
+        return ptr;
+    }
+
+    void operator delete(void *ptr)
+    {
+        ++mNCellDelCount;
+        std::free(ptr);
     }
 };
 
