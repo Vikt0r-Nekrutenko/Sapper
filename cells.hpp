@@ -109,7 +109,10 @@ public:
 class BombsNeighborCell : public Cell
 {
 public:
-    BombsNeighborCell() { mUniqueView = 3; }
+    BombsNeighborCell()
+    {
+        mUniqueView = 3;
+    }
 
     uint8_t view() const override
     {
