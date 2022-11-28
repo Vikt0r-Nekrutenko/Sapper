@@ -1,6 +1,7 @@
 #ifndef GAMEFIELD_HPP
 #define GAMEFIELD_HPP
 
+#include <functional>
 #include "cells.hpp"
 #include "chunkedmap.hpp"
 
