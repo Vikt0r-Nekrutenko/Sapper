@@ -77,6 +77,27 @@ public:
         }
     }
 
+    void activateCells(const stf::Vec2d &pos, std::list<stf::Vec2d> &emptyCells)
+    {
+        for(int y = pos.y-1; y <= pos.y+1; ++y) {
+            for(int x = pos.x-1; x <= pos.x+1; ++x) {
+                Cell *cell = static_cast<Cell*>(mField.at({x,y}));
+
+                if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
+                    continue;
+                else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
+//                        delete cell;
+                    put({x,y}, new EmptyCell);
+                    emptyCells.push_back({x,y});
+                    static_cast<Cell*>(mField.at({x,y}))->activate();
+                }
+                else if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
+                    cell->activate();
+                }
+            }
+        }
+    }
+
     void activate(const stf::Vec2d cursor)
     {
         std::list<stf::Vec2d> emptyCells;
@@ -87,31 +108,10 @@ public:
             return;
         }
 
-        auto checkAround = [&](const stf::Vec2d &pos) {
-
-            for(int y = pos.y-1; y <= pos.y+1; ++y) {
-                for(int x = pos.x-1; x <= pos.x+1; ++x) {
-                    Cell *cell = static_cast<Cell*>(mField.at({x,y}));
-
-                    if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
-                        continue;
-                    else if(cell->uniqueIntView() == Cell().uniqueIntView()) {
-//                        delete cell;
-                        put({x,y}, new EmptyCell);
-                        emptyCells.push_back({x,y});
-                        static_cast<Cell*>(mField.at({x,y}))->activate();
-                    }
-                    else if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
-                        cell->activate();
-                    }
-                }
-            }
-        };
-
         emptyCells.push_back(cursor);
 
         for(auto pos : emptyCells) {
-            checkAround(pos);
+            activateCells(pos, emptyCells);
         }
     }
 
