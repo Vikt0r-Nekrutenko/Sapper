@@ -145,6 +145,11 @@ public:
         mUniqueView = 2;
     }
 
+    stf::ColorTable color() const override
+    {
+        return mIsActivated ? mColor : stf::ColorTable::Magenta;
+    }
+
     void* operator new(size_t size)
     {
         void *ptr = std::malloc(size);

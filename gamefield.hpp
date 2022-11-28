@@ -21,9 +21,8 @@ public:
             if(at(pos) == nullptr) {
                 put(pos, new BombCell);
                 mBombsPositions.push_back(pos);
+                --bombs;
             }
-            else continue;
-            --bombs;
         }
         for(auto &cell : mArray) {
             if(cell == nullptr) {
@@ -101,7 +100,7 @@ public:
     static constexpr int Height = Width;
 
     Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
+    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, false, "sapper.schnks");
     std::vector<stf::Vec2d> mBombsPositions;
 
     Cell *onClick(const stf::Vec2d &cursor);

@@ -18,8 +18,6 @@ public:
 
     stf::smv::IView *put(stf::smv::IView *sender)
     {
-//        mField.update();
-//        mField.activate(mCursor);
         if (mField.onClick(mCursor)->uniqueIntView() == BombCell().uniqueIntView())
             return nullptr;
         return sender;
@@ -64,6 +62,7 @@ public:
 
     stf::smv::IView *update(stf::smv::IView *sender, const float dt) override
     {
+        mField.mField.cache().update(dt);
         return sender;
     }
 };
@@ -147,6 +146,7 @@ class Game : public stf::Window
 public:
     bool onUpdate(const float dt) override
     {
+        mCurrentView = mCurrentView->update(dt);
         mView.show(renderer);
         return mCurrentView == nullptr ? false : isContinue;
     }
@@ -172,6 +172,13 @@ public:
 
 int main()
 {
-//    srand(clock());
-    return Game().run();
+    srand(clock());
+    int result = Game().run();
+
+    printf("Empty    NEW/DEL : [%d] [%d]\n", Cell::mECellNewCount, Cell::mECellDelCount);
+    printf("Cell     NEW/DEL : [%d] [%d]\n", Cell::mCellNewCount, Cell::mCellDelCount);
+    printf("Neighbor NEW/DEL : [%d] [%d]\n", Cell::mNCellNewCount, Cell::mNCellDelCount);
+    printf("Bomb     NEW/DEL : [%d] [%d]\n", Cell::mBCellNewCount, Cell::mBCellDelCount);
+
+    return result;
 }
