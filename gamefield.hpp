@@ -51,6 +51,7 @@ public:
     stf::sdb::IChunk &load(FILE *file) override
     {
         stf::sdb::IChunk::load(file);
+        fread(&mIsInitialised, sizeof(mIsInitialised), 1, file);
 
         for(size_t i = 0; i < mArray.size(); ++i) {
             switch (static_cast<Cell*>(mArray[i])->uniqueIntView()) {
@@ -74,13 +75,24 @@ public:
             }
             }
         }
-        return *dynamic_cast<stf::sdb::IChunk*>(this);
+        return *this;
+    }
+
+    size_t sizeOfSelf() const override
+    {
+        return stf::sdb::IChunk::sizeOfSelf() + sizeof(mIsInitialised);
+    }
+
+    stf::sdb::IChunk &save(FILE *file) override
+    {
+        stf::sdb::IChunk::save(file);
+        fwrite(&mIsInitialised, sizeof(mIsInitialised), 1, file);
+        return *this;
     }
 
 protected:
 
     bool mIsInitialised = false;
-
 };
 
 class GameField
