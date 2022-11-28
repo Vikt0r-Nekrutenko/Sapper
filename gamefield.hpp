@@ -71,7 +71,10 @@ public:
 
     void update(const stf::Vec2d &cursor)
     {
-
+        for(auto &rec : mField.cache().chunksTable()) {
+            if(!static_cast<Chunk*>(rec.mChunkRec.mChunk)->initialise())
+                init(rec.mChunkRec.mPos);
+        }
     }
 
     void activate(const stf::Vec2d cursor)

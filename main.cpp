@@ -19,7 +19,7 @@ public:
     stf::smv::IView *put(stf::smv::IView *sender)
     {
         mField.update(mCursor);
-
+        mField.activate(mCursor);
         return sender;
     }
 
@@ -57,6 +57,8 @@ public:
         case ' ':
             return put(sender);
         }
+
+        mField.update(mCursor);
         return sender;
     }
 
@@ -79,7 +81,7 @@ public:
         constexpr int halfHeight = Chunk::Height >> 1;
         constexpr int halfWidth  = Chunk::Width  >> 1;
 
-        for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight; ++j, ++y) {
+        for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight + 2; ++j, ++y) {
             for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth+2; ++i, ++x) {
                 Chunk *chunk = (Chunk*)GM->mField.mField[{x,y}];
                 if(chunk != nullptr) {
