@@ -41,7 +41,7 @@ public:
     int bombsAround() const;
     void bombsAround(int value);
     size_t sizeOfSelf() const override;
-    void mark();
+    uint8_t mark();
 
 protected:
 

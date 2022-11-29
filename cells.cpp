@@ -31,9 +31,9 @@ size_t Cell::sizeOfSelf() const
     return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mAlterView) + sizeof(mBombsAround) + sizeof(mUniqueView);
 }
 
-void Cell::mark()
+uint8_t Cell::mark()
 {
-    mAlterView = mAlterView == MarkedCellView ? mView : MarkedCellView;
+    return mAlterView = mAlterView == MarkedCellView ? mView : MarkedCellView;
 }
 
 void Cell::save(FILE *file)

@@ -10,6 +10,8 @@ class GameModel : public stf::smv::BaseModel
 public:
     GameField mField = GameField();
     stf::Vec2d mCursor { Chunk::Width >> 1, Chunk::Height >> 1 };
+    uint32_t mLifes = 1;
+    uint32_t mPoints = 0;
 
     GameModel()
     {
@@ -19,7 +21,7 @@ public:
     stf::smv::IView *put(stf::smv::IView *sender)
     {
         if (mField.onClick(mCursor)->uniqueIntView() == BombCell().uniqueIntView())
-            return nullptr;
+            --mLifes;
         return sender;
     }
 
@@ -55,8 +57,15 @@ public:
                 mCursor.x = 0;
             break;
         case 'f':
-            static_cast<Cell*>(mField.mField.at(mCursor))->mark();
+        {
+            Cell *selected = static_cast<Cell*>(mField.mField.at(mCursor));
+            if(selected->mark() == Cell::MarkedCellView)
+                if(selected->uniqueIntView() == BombCell().uniqueIntView())
+                    ++mPoints;
+            if(mPoints % 8 == 0)
+                ++mLifes;
             break;
+        }
         case ' ':
             return put(sender);
         }
@@ -98,6 +107,8 @@ public:
                     renderer.drawPixel({halfWidth * 2,     halfHeight + 2}, '>');
                     renderer.drawPixel({halfWidth * 2 + 2, halfHeight + 2}, '<');
                 }
+                renderer.draw({0,11}, "Points: %d", GM->mPoints);
+                renderer.draw({0,12}, "Lifes:  %d", GM->mLifes);
             }
         }
         showConsole(renderer, *GM);
@@ -151,7 +162,7 @@ public:
     {
         mCurrentView = mCurrentView->update(dt);
         mView.show(renderer);
-        return mCurrentView == nullptr ? false : isContinue;
+        return mModel.mLifes == 0 ? false : isContinue;
     }
 
     void keyEvents(const int key) override
