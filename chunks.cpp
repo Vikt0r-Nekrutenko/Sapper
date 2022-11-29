@@ -4,19 +4,8 @@ Chunk::Chunk()
     : stf::sdb::IChunk({Width, Height})
 {
     mArray.resize(Width * Height, nullptr);
-    int bombs = BombsPerChunk;
-    while(bombs) {
-        stf::Vec2d pos { rand() % Width, rand() % Height };
-        if(at(pos) == nullptr) {
-            put(pos, new BombCell);
-            mBombsPositions.push_back(pos);
-            --bombs;
-        }
-    }
     for(auto &cell : mArray) {
-        if(cell == nullptr) {
-            cell = new Cell;
-        }
+        cell = new Cell;
     }
 }
 
@@ -39,7 +28,18 @@ stf::sdb::IChunk &Chunk::load(FILE *file)
 {
     stf::sdb::IChunk::load(file);
     fread(&mIsInitialised, sizeof(mIsInitialised), 1, file);
-
+    if(!mIsInitialised) {
+        int bombs = BombsPerChunk;
+        while(bombs) {
+            stf::Vec2d pos { rand() % Width, rand() % Height };
+            /*if(at(pos) == nullptr)*/ {
+                put(pos, new BombCell);
+                mBombsPositions.push_back(pos);
+                --bombs;
+            }
+        }
+        mIsInitialised = true;
+    }
     for(size_t i = 0; i < mArray.size(); ++i) {
         switch (static_cast<Cell*>(mArray[i])->uniqueIntView()) {
         case 1: {
