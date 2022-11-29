@@ -58,8 +58,8 @@ void Cell::load(FILE *file)
 
 uint8_t Cell::view() const
 {
-            return mIsActivated ? mView : mAlterView;
-//    return mView;
+//            return mIsActivated ? mView : mAlterView;
+    return mAlterView == MarkedCellView ? mAlterView : mView;
 }
 
 int Cell::uniqueIntView() const
