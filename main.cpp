@@ -54,6 +54,9 @@ public:
             else
                 mCursor.x = 0;
             break;
+        case 'f':
+            static_cast<Cell*>(mField.mField.at(mCursor))->mark();
+            break;
         case ' ':
             return put(sender);
         }

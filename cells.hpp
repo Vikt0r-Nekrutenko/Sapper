@@ -10,6 +10,7 @@ class Cell : public stf::sdb::ICell
 {
 public:
     static const uint8_t UninitialisedCellView = '+';
+    static const uint8_t MarkedCellView = 'F';
 
     Cell() = default;
     Cell(Cell &cell) = default;
@@ -40,6 +41,7 @@ public:
     int bombsAround() const;
     void bombsAround(int value);
     size_t sizeOfSelf() const override;
+    void mark();
 
 protected:
 
@@ -47,6 +49,7 @@ protected:
     int mUniqueView = 0;
     bool mIsActivated = false;
     uint8_t mView = UninitialisedCellView;
+    uint8_t mAlterView = UninitialisedCellView;
     stf::ColorTable mColor = stf::ColorTable::Default;
 };
 

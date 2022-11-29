@@ -28,7 +28,12 @@ void Cell::operator delete(void *ptr)
 
 size_t Cell::sizeOfSelf() const
 {
-    return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mBombsAround) + sizeof(mUniqueView);
+    return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mAlterView) + sizeof(mBombsAround) + sizeof(mUniqueView);
+}
+
+void Cell::mark()
+{
+    mAlterView = mAlterView == MarkedCellView ? mView : MarkedCellView;
 }
 
 void Cell::save(FILE *file)
@@ -36,6 +41,7 @@ void Cell::save(FILE *file)
     fwrite(&mView, sizeof(mView), 1, file);
     fwrite(&mColor, sizeof(mColor), 1, file);
     fwrite(&mIsActivated, sizeof(mIsActivated), 1, file);
+    fwrite(&mAlterView, sizeof(mIsActivated), 1, file);
     fwrite(&mBombsAround, sizeof(mBombsAround), 1, file);
     fwrite(&mUniqueView, sizeof(mUniqueView), 1, file);
 }
@@ -45,14 +51,15 @@ void Cell::load(FILE *file)
     fread(&mView, sizeof(mView), 1, file);
     fread(&mColor, sizeof(mColor), 1, file);
     fread(&mIsActivated, sizeof(mIsActivated), 1, file);
+    fread(&mAlterView, sizeof(mIsActivated), 1, file);
     fread(&mBombsAround, sizeof(mBombsAround), 1, file);
     fread(&mUniqueView, sizeof(mUniqueView), 1, file);
 }
 
 uint8_t Cell::view() const
 {
-    //        return mIsActivated ? mView : UninitialisedCellView;
-    return mView;
+            return mIsActivated ? mView : mAlterView;
+//    return mView;
 }
 
 int Cell::uniqueIntView() const
@@ -118,7 +125,7 @@ BombCell::BombCell()
 
 stf::ColorTable BombCell::color() const
 {
-    return mIsActivated ? mColor : stf::ColorTable::Magenta;
+    return mIsActivated ? stf::ColorTable::Magenta : mColor;
 }
 
 void *BombCell::operator new(size_t size)
@@ -141,7 +148,7 @@ BombsNeighborCell::BombsNeighborCell()
 
 uint8_t BombsNeighborCell::view() const
 {
-    return mIsActivated ? '0' + mBombsAround : UninitialisedCellView;
+    return mIsActivated ? '0' + mBombsAround : mAlterView;
     //        return mView;
 }
 
