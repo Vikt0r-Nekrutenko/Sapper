@@ -11,13 +11,10 @@ public:
     static constexpr int Height = Width;
 
     Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, false, "sapper.schnks");
+    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
     std::vector<stf::Vec2d> mBombsPositions;
 
     Cell *onClick(const stf::Vec2d &cursor);
-
-private:
-
     Cell* put(const stf::Vec2d &pos, Cell* cell);
 };
 

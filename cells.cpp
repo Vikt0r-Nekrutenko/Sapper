@@ -13,6 +13,9 @@ size_t Cell::mBCellDelCount = 0;
 size_t Cell::mNCellNewCount = 0;
 size_t Cell::mNCellDelCount = 0;
 
+size_t Cell::mLCellNewCount = 0;
+size_t Cell::mLCellDelCount = 0;
+
 void *Cell::operator new(size_t size)
 {
     void *ptr = std::malloc(size);
@@ -162,5 +165,25 @@ void *BombsNeighborCell::operator new(size_t size)
 void BombsNeighborCell::operator delete(void *ptr)
 {
     ++mNCellDelCount;
+    std::free(ptr);
+}
+
+LifeCell::LifeCell()
+{
+    mUniqueView = 4;
+    mView = 'L';
+    mColor = stf::ColorTable::Red;
+}
+
+void *LifeCell::operator new(size_t size)
+{
+    void *ptr = std::malloc(size);
+    ++mLCellNewCount;
+    return ptr;
+}
+
+void LifeCell::operator delete(void *ptr)
+{
+    ++mLCellDelCount;
     std::free(ptr);
 }

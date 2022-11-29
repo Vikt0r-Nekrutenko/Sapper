@@ -27,6 +27,9 @@ public:
     static size_t mNCellNewCount;
     static size_t mNCellDelCount;
 
+    static size_t mLCellNewCount;
+    static size_t mLCellDelCount;
+
     void* operator new(size_t size);
     void operator delete(void *ptr);
 
@@ -57,6 +60,15 @@ class EmptyCell : public Cell
 {
 public:
     EmptyCell();
+
+    void* operator new(size_t size);
+    void operator delete(void *ptr);
+};
+
+class LifeCell : public Cell
+{
+public:
+    LifeCell();
 
     void* operator new(size_t size);
     void operator delete(void *ptr);

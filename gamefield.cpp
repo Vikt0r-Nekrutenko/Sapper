@@ -45,7 +45,10 @@ Cell *GameField::onClick(const stf::Vec2d &cursor)
             cell->bombsAround(cell->bombsAround() + aroundBombCount);
         } else {
             for(auto &npos : tmpEmptyList) {
-                put(npos, new EmptyCell);
+                if(rand() % 100 < 2)
+                    put(npos, new LifeCell);
+                else
+                    put(npos, new EmptyCell);
                 emptyCells.push_back(npos);
                 static_cast<Cell*>(mField.at(npos))->activate();
             }

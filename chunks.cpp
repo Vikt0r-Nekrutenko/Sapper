@@ -60,6 +60,12 @@ stf::sdb::IChunk &Chunk::load(FILE *file)
             mArray[i] = tmp;
             break;
         }
+        case 4: {
+            auto tmp = new LifeCell(*static_cast<LifeCell *>(mArray[i]));
+            delete mArray[i];
+            mArray[i] = tmp;
+            break;
+        }
         }
     }
     return *this;

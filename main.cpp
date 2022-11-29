@@ -20,8 +20,14 @@ public:
 
     stf::smv::IView *put(stf::smv::IView *sender)
     {
-        if (mField.onClick(mCursor)->uniqueIntView() == BombCell().uniqueIntView())
+        Cell *selected = mField.onClick(mCursor);
+        if (selected->uniqueIntView() == BombCell().uniqueIntView())
             --mLifes;
+        else if(selected->uniqueIntView() == LifeCell().uniqueIntView()) {
+            mField.put(mCursor, new EmptyCell);
+            ++mLifes;
+        }
+
         return sender;
     }
 
@@ -62,6 +68,7 @@ public:
             if(selected->mark() == Cell::MarkedCellView)
                 if(selected->uniqueIntView() == BombCell().uniqueIntView())
                     ++mPoints;
+
             if(mPoints % 8 == 0)
                 ++mLifes;
             break;
