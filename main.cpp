@@ -2,153 +2,7 @@
 #include <string>
 #include <iview.hpp>
 #include "window.hpp"
-#include "imodel.hpp"
-#include "chunks.hpp"
-#include "chunkedmap.hpp"
-
-class GameModel : public stf::smv::BaseModel
-{
-public:
-    static constexpr int Width  = 5;
-    static constexpr int Height = Width;
-
-    Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
-    std::vector<stf::Vec2d> mBombsPositions;
-
-    stf::Vec2d mCursor { Chunk::Width >> 1, Chunk::Height >> 1 };
-    uint32_t mLifes = 1;
-    uint32_t mPoints = 0;
-
-    GameModel()
-    {
-
-    }
-
-    Cell *put(const stf::Vec2d &pos, Cell *cell)
-    {
-        delete mField.at(pos);
-        return static_cast<Cell*>(mField[pos]->put(pos, cell));
-    }
-
-    Cell *onClick(const stf::Vec2d &cursor)
-    {
-
-        Cell *cell = static_cast<Cell*>(mField.at(cursor));
-        if(cell->uniqueIntView() == BombsNeighborCell().uniqueIntView()) {
-            return cell->activate();
-        }
-        if(cell->uniqueIntView() == BombCell().uniqueIntView()) {
-            return cell->activate();
-        }
-
-        std::list<stf::Vec2d> emptyCells { cursor };
-
-        for(auto pos : emptyCells) {
-            int aroundBombCount = 0;
-            std::list<stf::Vec2d> tmpEmptyList;
-
-            for(int y = pos.y-1; y <= pos.y+1; ++y) {
-                for(int x = pos.x-1; x <= pos.x+1; ++x) {
-
-                    Cell *cell = static_cast<Cell*>(mField.at({x,y}));
-
-                    if(x<0 || y<0 || x > Width * Chunk::Width - 1 || y > Height * Chunk::Height - 1)
-                        continue;
-
-                    if(cell->uniqueIntView() == BombCell().uniqueIntView())
-                        ++aroundBombCount;
-                    else if(cell->uniqueIntView() == Cell().uniqueIntView())
-                        tmpEmptyList.push_back({x,y});
-
-                }
-            }
-            if(aroundBombCount) {
-                put(pos, new BombsNeighborCell());
-                cell = static_cast<Cell*>(mField.at(pos));
-                cell->activate();
-                cell->bombsAround(cell->bombsAround() + aroundBombCount);
-            } else {
-                for(auto &npos : tmpEmptyList) {
-                    if(rand() % 100 < 2)
-                        put(npos, new LifeCell);
-                    else
-                        put(npos, new EmptyCell);
-                    emptyCells.push_back(npos);
-                    static_cast<Cell*>(mField.at(npos))->activate();
-                }
-            }
-        }
-        return static_cast<Cell*>(mField.at(emptyCells.back()));
-    }
-
-    stf::smv::IView *put(stf::smv::IView *sender)
-    {
-        Cell *selected = onClick(mCursor);
-        if (selected->uniqueIntView() == BombCell().uniqueIntView())
-            --mLifes;
-        else if(selected->uniqueIntView() == LifeCell().uniqueIntView()) {
-            put(mCursor, new EmptyCell);
-            ++mLifes;
-        }
-
-        return sender;
-    }
-
-    stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override
-    {
-        switch (key)
-        {
-        case 'w':
-            if(mCursor.y > 0)
-                mCursor.y -= 1;
-            else
-                mCursor.y = Height * Chunk::Height - 1;
-            break;
-
-        case 'a':
-            if(mCursor.x > 0)
-                mCursor.x -= 1;
-            else
-                mCursor.x = Width * Chunk::Width - 1;
-            break;
-
-        case 's':
-            if(mCursor.y < Height * Chunk::Height-1)
-                mCursor.y += 1;
-            else
-                mCursor.y = 0;
-            break;
-
-        case 'd':
-            if(mCursor.x < Width * Chunk::Width-1)
-                mCursor.x += 1;
-            else
-                mCursor.x = 0;
-            break;
-        case 'f':
-        {
-            Cell *selected = static_cast<Cell*>(mField.at(mCursor));
-            if(selected->mark() == Cell::MarkedCellView)
-                if(selected->uniqueIntView() == BombCell().uniqueIntView())
-                    ++mPoints;
-
-            if(mPoints % 8 == 0)
-                ++mLifes;
-            break;
-        }
-        case ' ':
-            return put(sender);
-        }
-        return sender;
-    }
-
-    stf::smv::IView *update(stf::smv::IView *sender, const float dt) override
-    {
-        mField.cache().update(dt);
-        return sender;
-    }
-};
+#include "gamemodel.hpp"
 
 class GameView : public stf::smv::IView
 {
@@ -165,7 +19,7 @@ public:
 
         for(int j = 0, y = GM->mCursor.y - halfHeight; y <= GM->mCursor.y + halfHeight; ++j, ++y) {
             for(int i = 0, x = GM->mCursor.x - halfWidth; x <= GM->mCursor.x + halfWidth; ++i, ++x) {
-                Chunk *chunk = (Chunk*)GM->mField[{x,y}];
+                Chunk *chunk = (Chunk*)GM->field()[{x,y}];
                 if(chunk != nullptr) {
                     Cell *cell = (Cell*)chunk->at({x,y});
                     renderer.drawPixel({ i * 2 + 1, j + 2 }, cell->view(), cell->color());
@@ -189,17 +43,17 @@ public:
     {
         renderer.draw({40, 2}, "Selectable: X[%d]:Y[%d]", GM.mCursor.x, GM.mCursor.y);
 
-        renderer.draw({40,5}, "New/Del OP : [%d] [%d]", (int)GM.mField.cache().newOperationsCount(), (int)GM.mField.cache().deleteOperationsCount());
-        renderer.draw({40,6}, "Load/Save  : [%d] [%d]", (int)GM.mField.cache().loadCount(), (int)GM.mField.cache().saveCount());
-        renderer.draw({40,7}, "Chunks     : %d", (int)GM.mField.cache().cacheSize());
-        renderer.draw({40,8}, "Memory     : %fkb", (float)GM.mField.cache().memUsage()/1'000.f);
+        renderer.draw({40,5}, "New/Del OP : [%d] [%d]", (int)GM.field().cache().newOperationsCount(), (int)GM.field().cache().deleteOperationsCount());
+        renderer.draw({40,6}, "Load/Save  : [%d] [%d]", (int)GM.field().cache().loadCount(), (int)GM.field().cache().saveCount());
+        renderer.draw({40,7}, "Chunks     : %d", (int)GM.field().cache().cacheSize());
+        renderer.draw({40,8}, "Memory     : %fkb", (float)GM.field().cache().memUsage()/1'000.f);
 
-        renderer.draw({40,10}, "Load T          : %dmicS", GM.mField.cache().loadTime());
+        renderer.draw({40,10}, "Load T          : %dmicS", GM.field().cache().loadTime());
 
-        renderer.draw({40, 12}, "Misses : %d", (int)GM.mField.cache().cacheMisses());
-        renderer.draw({40, 13}, "Hits   : %d", (int)GM.mField.cache().cacheHits());
-        renderer.draw({40, 14}, "M&S    : %d", (int)GM.mField.cache().cacheCalls());
-        renderer.draw({40, 15}, "M/S    : %d", (int)GM.mField.cache().cacheHits() / ((int)GM.mField.cache().cacheMisses() ? (int)GM.mField.cache().cacheMisses() : 1));
+        renderer.draw({40, 12}, "Misses : %d", (int)GM.field().cache().cacheMisses());
+        renderer.draw({40, 13}, "Hits   : %d", (int)GM.field().cache().cacheHits());
+        renderer.draw({40, 14}, "M&S    : %d", (int)GM.field().cache().cacheCalls());
+        renderer.draw({40, 15}, "M/S    : %d", (int)GM.field().cache().cacheHits() / ((int)GM.field().cache().cacheMisses() ? (int)GM.field().cache().cacheMisses() : 1));
 
         renderer.draw({40, 17}, "Empty    NEW/DEL : [%d] [%d]", Cell::mECellNewCount, Cell::mECellDelCount);
         renderer.draw({40, 18}, "Cell     NEW/DEL : [%d] [%d]", Cell::mCellNewCount, Cell::mCellDelCount);
@@ -208,7 +62,7 @@ public:
 
         int y = 21;
         int x = 40;
-        for(auto &chunk : GM.mField.cache().chunksTable()) {
+        for(auto &chunk : GM.field().cache().chunksTable()) {
             renderer.draw({x, y++}, "%d (%d) [%d]=[%d]---%d:%d",
                           y - 21,
                           chunk.mIsActive,
@@ -229,6 +83,15 @@ class Game : public stf::Window
     bool isContinue = true;
 
 public:
+
+    Game()
+    {
+        enableLog();
+        stf::Renderer::log.setX(0);
+        stf::Renderer::log.setY(14);
+        stf::Renderer::log.setHeight(14);
+    }
+
     bool onUpdate(const float dt) override
     {
         mCurrentView = mCurrentView->update(dt);

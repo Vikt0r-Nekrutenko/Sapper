@@ -1,5 +1,4 @@
 #include "cells.hpp"
-#include "gamefield.hpp"
 
 size_t Cell::mCellNewCount = 0;
 size_t Cell::mCellDelCount = 0;
