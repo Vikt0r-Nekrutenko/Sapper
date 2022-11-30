@@ -6,6 +6,8 @@
 
 class GameView : public stf::smv::IView
 {
+    bool mIsConsoleShow = false;
+
 public:
     GameView(GameModel *model)
         : stf::smv::IView(model) { }
@@ -36,7 +38,8 @@ public:
                 renderer.draw({0,12}, "Lifes:  %d", GM->mLifes);
             }
         }
-        showConsole(renderer, *GM);
+        if(mIsConsoleShow)
+            showConsole(renderer, *GM);
     }
 
     void showConsole(stf::Renderer &renderer, GameModel &GM)
@@ -72,6 +75,14 @@ public:
                           chunk.mChunkRec.mPos.y);
 
         }
+    }
+
+    stf::smv::IView *keyEventsHandler(const int key) override
+    {
+        if(key == '`') {
+            mIsConsoleShow = mIsConsoleShow ? false : true;
+        }
+        return stf::smv::IView::keyEventsHandler(key);
     }
 };
 
