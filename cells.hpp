@@ -54,6 +54,7 @@ protected:
     uint8_t mView = UninitialisedCellView;
     uint8_t mAlterView = UninitialisedCellView;
     stf::ColorTable mColor = stf::ColorTable::Default;
+    uint8_t __empty[12];
 };
 
 class EmptyCell : public Cell
