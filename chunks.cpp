@@ -30,14 +30,16 @@ stf::sdb::IChunk &Chunk::load(FILE *file)
     fread(&mIsInitialised, sizeof(mIsInitialised), 1, file);
     if(!mIsInitialised) {
         int bombs = BombsPerChunk;
-        while(bombs) {
+        do {
             stf::Vec2d pos { rand() % Width, rand() % Height };
-            /*if(at(pos) == nullptr)*/ {
+            if(static_cast<Cell *>(at(pos))->uniqueIntView() == Cell().uniqueIntView()) {
+                delete at(pos);
                 put(pos, new BombCell);
                 mBombsPositions.push_back(pos);
                 --bombs;
             }
         }
+        while(bombs);
         mIsInitialised = true;
     }
     for(size_t i = 0; i < mArray.size(); ++i) {
