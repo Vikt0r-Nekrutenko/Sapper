@@ -6,7 +6,6 @@ CONFIG -= qt
 SOURCES += \
         cells.cpp \
         chunks.cpp \
-        gamefield.cpp \
         main.cpp
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../stf/release/ -lstf
@@ -22,5 +21,4 @@ DEPENDPATH += $$PWD/../stf \
 
 HEADERS += \
     cells.hpp \
-    chunks.hpp \
-    gamefield.hpp
+    chunks.hpp
