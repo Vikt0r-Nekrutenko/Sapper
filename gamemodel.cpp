@@ -9,6 +9,7 @@ void GameSaveModel::save()
     mCursorY = mModel->mCursor.y;
     mLifes = mModel->mLifes;
     mPoints = mModel->mPoints;
+    mGameT = mModel->mGameTime;
 
     push<GameSaveModel>();
 }
@@ -21,14 +22,17 @@ void GameSaveModel::load()
     mModel->mCursor.y = mCursorY();
     mModel->mLifes = mLifes();
     mModel->mPoints = mPoints();
+    mModel->mGameTime = mGameT();
 }
 
-GameResultModel::GameResultModel()
-    : stf::sdb::Model("sapper_results.sdb") {}
+GameResultModel::GameResultModel(GameModel *model)
+    : stf::sdb::Model("sapper_results.sdb"), mModel(model) {}
 
-void GameResultModel::gameOverHandler(int winner, const stf::Vec2d &wins){
-    gameTime = stf::Time(nullptr);
-
+void GameResultModel::gameOverHandler()
+{
+    mTime = stf::Time(nullptr);
+    mPoints = mModel->mPoints;
+    mGameTime = mModel->mGameTime;
 }
 
 

@@ -21,6 +21,7 @@ public:
     stf::sdb::IntField mCursorY = stf::sdb::IntField(this);
     stf::sdb::IntField mLifes   = stf::sdb::IntField(this);
     stf::sdb::IntField mPoints  = stf::sdb::IntField(this);
+    stf::sdb::IntField mGameT   = stf::sdb::IntField(this);
 
     GameModel *mModel;
 };
@@ -28,13 +29,15 @@ public:
 class GameResultModel : public stf::sdb::Model
 {
 public:
-    GameResultModel();
+    GameResultModel(GameModel *model);
 
-    void gameOverHandler(int winner, const stf::Vec2d& wins);;
+    void gameOverHandler();;
 
-    stf::sdb::DateTimeField gameTime    = stf::sdb::DateTimeField(this);
+    stf::sdb::DateTimeField mTime       = stf::sdb::DateTimeField(this);
     stf::sdb::IntField      mPoints     = stf::sdb::IntField(this);
-    stf::sdb::DateTimeField mGameTime   = stf::sdb::DateTimeField(this);
+    stf::sdb::IntField      mGameTime   = stf::sdb::IntField(this);
+
+    GameModel *mModel;
 };
 
 class GameModel : public stf::smv::BaseModel
@@ -58,7 +61,7 @@ public:
     stf::sdb::ChunkedMap &field();
 
     GameSaveModel saves = GameSaveModel(this);
-    GameResultModel results = GameResultModel();
+    GameResultModel results = GameResultModel(this);
 
 private:
 
