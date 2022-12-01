@@ -50,11 +50,11 @@ public:
         renderer.draw({2,1}, "Points: %d", GM->mPoints);
         renderer.draw({renderer.Size.x - 10, 1}, "Lifes: %d", GM->mLifes);
         constexpr const char *title = "-=SAPPER=-";
-        renderer.draw({halfWidth - (std::strlen(title) >> 1), 1}, "%s", title);
+        renderer.draw({halfWidth - (int)(std::strlen(title) >> 1), 1}, "%s", title);
 
         // FOOTER
         constexpr const char *creditals = "Author: Viktor Nekrutenko | Date: 12.01.2022";
-        renderer.draw({halfWidth - (std::strlen(creditals)>>1), renderer.Size.y - 1}, "%s", creditals);
+        renderer.draw({halfWidth - (int)(std::strlen(creditals)>>1), renderer.Size.y - 1}, "%s", creditals);
 
         if(mIsConsoleShow)
             showConsole(renderer, *GM);
@@ -80,14 +80,16 @@ public:
         renderer.draw({pos.x, pos.y+14}, "Neighbor NEW/DEL : [%d] [%d]", Cell::mNCellNewCount, Cell::mNCellDelCount);
         renderer.draw({pos.x, pos.y+15}, "Bomb     NEW/DEL : [%d] [%d]", Cell::mBCellNewCount, Cell::mBCellDelCount);
 
-        int y = pos.y+17;
+        int y = pos.y + 17;
         int x = pos.x;
+
         for(auto &chunk : GM.field().cache().chunksTable()) {
-            renderer.draw({x, y++}, "%d (%d) [%d]=[%d]---%d:%d",
-                          y - 17,
+            renderer.draw({x, y++}, " %d | (%d) | [%d] | [%d] [%d] | %d:%d",
+                          y - pos.y - 17,
                           chunk.mIsActive,
                           chunk.mLifeTime,
-                          chunk.mHits - chunk.mCalls,
+                          chunk.mHits,
+                          chunk.mCalls,
                           chunk.mChunkRec.mPos.x,
                           chunk.mChunkRec.mPos.y);
 
@@ -151,10 +153,10 @@ int main()
 //    srand(clock());
     int result = Game().run();
 
-    printf("Empty    NEW/DEL : [%d] [%d]\n", Cell::mECellNewCount, Cell::mECellDelCount);
-    printf("Cell     NEW/DEL : [%d] [%d]\n", Cell::mCellNewCount, Cell::mCellDelCount);
-    printf("Neighbor NEW/DEL : [%d] [%d]\n", Cell::mNCellNewCount, Cell::mNCellDelCount);
-    printf("Bomb     NEW/DEL : [%d] [%d]\n", Cell::mBCellNewCount, Cell::mBCellDelCount);
+    printf("Empty    NEW/DEL : [%lld] [%lld]\n", Cell::mECellNewCount, Cell::mECellDelCount);
+    printf("Cell     NEW/DEL : [%lld] [%lld]\n", Cell::mCellNewCount, Cell::mCellDelCount);
+    printf("Neighbor NEW/DEL : [%lld] [%lld]\n", Cell::mNCellNewCount, Cell::mNCellDelCount);
+    printf("Bomb     NEW/DEL : [%lld] [%lld]\n", Cell::mBCellNewCount, Cell::mBCellDelCount);
 
     return result;
 }
