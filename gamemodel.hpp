@@ -8,10 +8,10 @@
 class GameModel : public stf::smv::BaseModel
 {
 public:
-    static constexpr int Width  = 5;
+    static constexpr int Width  = 105;
     static constexpr int Height = Width;
 
-    stf::Vec2d mCursor { Chunk::Width >> 1, Chunk::Height >> 1 };
+    stf::Vec2d mCursor {0,0};//{ Width * Chunk::Width >> 1, Height * Chunk::Height >> 1 };
     uint32_t mLifes = 1;
     uint32_t mPoints = 0;
 
@@ -28,7 +28,7 @@ private:
     Cell *put(const stf::Vec2d &pos, Cell *cell);
 
     Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, false, "sapper.schnks");
+    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
     std::vector<stf::Vec2d> mBombsPositions;
 };
 
