@@ -42,14 +42,13 @@ public:
 
 class GameModel : public stf::smv::BaseModel
 {
+    friend class GameResultModel;
+    friend class GameSaveModel;
+    friend class GameView;
 public:
     static constexpr int Width  = 105;
     static constexpr int Height = Width;
 
-    stf::Vec2d mCursor {0,0};//{ Width * Chunk::Width >> 1, Height * Chunk::Height >> 1 };
-    uint32_t mLifes  = 1;
-    uint32_t mPoints = 0;
-    time_t mGameTime = 0;
 
     GameModel();
     Cell *onClick(const stf::Vec2d &cursor);
@@ -70,6 +69,11 @@ private:
     Chunk mBegin = Chunk();
     stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
     std::vector<stf::Vec2d> mBombsPositions;
+
+    stf::Vec2d mCursor {0,0};//{ Width * Chunk::Width >> 1, Height * Chunk::Height >> 1 };
+    uint32_t mLifes  = 1;
+    uint32_t mPoints = 0;
+    time_t mGameTime = 0;
 };
 
 #endif // GAMEMODEL_HPP
