@@ -1,5 +1,36 @@
 #include "gamemodel.hpp"
 
+GameSaveModel::GameSaveModel(GameModel *model)
+    : stf::sdb::StackModel("sapper_saves.sdb"), mModel(model) {}
+
+void GameSaveModel::save()
+{
+    mCursorX = mModel->mCursor.x;
+    mCursorY = mModel->mCursor.y;
+    mLifes = mModel->mLifes;
+    mPoints = mModel->mPoints;
+
+    push<GameSaveModel>();
+}
+
+void GameSaveModel::load()
+{
+    pop<GameSaveModel>();
+
+    mModel->mCursor.x = mCursorX();
+    mModel->mCursor.y = mCursorY();
+    mModel->mLifes = mLifes();
+    mModel->mPoints = mPoints();
+}
+
+GameResultModel::GameResultModel()
+    : stf::sdb::Model("sapper_results.sdb") {}
+
+void GameResultModel::gameOverHandler(int winner, const stf::Vec2d &wins){
+    gameTime = stf::Time(nullptr);
+
+}
+
 
 Cell *GameModel::put(const stf::Vec2d &pos, Cell *cell)
 {
@@ -10,6 +41,13 @@ Cell *GameModel::put(const stf::Vec2d &pos, Cell *cell)
 stf::sdb::ChunkedMap &GameModel::field()
 {
     return mField;
+}
+
+GameModel::GameModel()
+{
+    try {
+        results.load(results.header().size - 1);
+    } catch(...) { }
 }
 
 Cell *GameModel::onClick(const stf::Vec2d &cursor)

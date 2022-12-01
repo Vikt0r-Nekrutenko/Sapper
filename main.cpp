@@ -100,6 +100,14 @@ public:
     {
         if(key == '`') {
             mIsConsoleShow = mIsConsoleShow ? false : true;
+        } else if(key == 'l') {
+            try {
+                static_cast<GameModel*>(m_model)->saves.load();
+            } catch(...) {  }
+        } else if(key == 'k') {
+            try {
+                static_cast<GameModel*>(m_model)->saves.save();
+            } catch(...) {  }
         }
         return stf::smv::IView::keyEventsHandler(key);
     }
