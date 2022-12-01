@@ -4,6 +4,11 @@
 #include "window.hpp"
 #include "gamemodel.hpp"
 
+#define daysFromSeconds(s)      (s / (3600 * 24))
+#define hoursFromSeconds(s)     ((s / 3600) % 24)
+#define minutesFromSeconds(s)   ((s / 60) % 60)
+#define secondsFromSeconds(s)   (s % 60)
+
 class GameView : public stf::smv::IView
 {
     bool mIsConsoleShow = false;
@@ -49,8 +54,14 @@ public:
         // HEADER
         renderer.draw({2,1}, "Points: %d", GM->mPoints);
         renderer.draw({renderer.Size.x - 10, 1}, "Lifes: %d", GM->mLifes);
-        constexpr const char *title = "-=SAPPER=-";
-        renderer.draw({halfWidth - (int)(std::strlen(title) >> 1), 1}, "%s", title);
+        constexpr const char gameTimeTitle[] = "Game time: %d:%d:%d:%d";
+        int titleX = halfWidth - (int)(std::size(gameTimeTitle) >> 1);
+        renderer.draw({titleX, 1},
+                      gameTimeTitle,
+                      daysFromSeconds(GM->mGameTime),
+                      hoursFromSeconds(GM->mGameTime),
+                      minutesFromSeconds(GM->mGameTime),
+                      secondsFromSeconds(GM->mGameTime));
 
         // FOOTER
         constexpr const char *creditals = "Author: Viktor Nekrutenko | Date: 12.01.2022";

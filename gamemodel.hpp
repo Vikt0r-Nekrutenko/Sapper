@@ -43,6 +43,7 @@ public:
     static constexpr int Width  = 105;
     static constexpr int Height = Width;
 
+    time_t mGameTime = 0;
     stf::Vec2d mCursor {0,0};//{ Width * Chunk::Width >> 1, Height * Chunk::Height >> 1 };
     uint32_t mLifes = 1;
     uint32_t mPoints = 0;

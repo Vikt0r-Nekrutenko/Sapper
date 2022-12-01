@@ -162,8 +162,16 @@ stf::smv::IView *GameModel::keyEventsHandler(stf::smv::IView *sender, const int 
     return sender;
 }
 
+float elapsed = 0;
+
 stf::smv::IView *GameModel::update(stf::smv::IView *sender, const float dt)
 {
+    if(elapsed > 1000.f) {
+        ++mGameTime;
+        elapsed = 0.f;
+    }
+    elapsed += dt;
+
     mField.cache().update(dt);
     return sender;
 }
