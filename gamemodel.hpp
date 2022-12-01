@@ -52,6 +52,7 @@ public:
 
     GameModel();
     Cell *onClick(const stf::Vec2d &cursor);
+    void reset();
 
     stf::smv::IView *put(stf::smv::IView *sender);
     stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override;
@@ -70,7 +71,7 @@ private:
     stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
     std::vector<stf::Vec2d> mBombsPositions;
 
-    stf::Vec2d mCursor {0,0};//{ Width * Chunk::Width >> 1, Height * Chunk::Height >> 1 };
+    stf::Vec2d mCursor { Width * Chunk::Width >> 1, Height * Chunk::Height >> 1 };
     uint32_t mLifes  = 1;
     uint32_t mPoints = 0;
     time_t mGameTime = 0;

@@ -145,7 +145,7 @@ public:
     {
         mCurrentView = mCurrentView->update(dt);
         mView.show(renderer);
-        return mModel.mLifes == 0 ? false : isContinue;
+        return isContinue;
     }
 
     void keyEvents(const int key) override
