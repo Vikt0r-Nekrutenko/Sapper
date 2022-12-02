@@ -8,6 +8,7 @@ SOURCES += \
         chunks.cpp \
         endview.cpp \
         gamemodel.cpp \
+        gameview.cpp \
         main.cpp
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../stf/release/ -lstf
@@ -25,4 +26,5 @@ HEADERS += \
     cells.hpp \
     chunks.hpp \
     endview.hpp \
-    gamemodel.hpp
+    gamemodel.hpp \
+    gameview.hpp
