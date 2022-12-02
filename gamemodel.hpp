@@ -7,6 +7,11 @@
 #include "stackmodel.hpp"
 #include "fields.hpp"
 
+#define daysFromSeconds(s)      (s / (3600 * 24))
+#define hoursFromSeconds(s)     ((s / 3600) % 24)
+#define minutesFromSeconds(s)   ((s / 60) % 60)
+#define secondsFromSeconds(s)   (s % 60)
+
 class GameModel;
 
 class GameSaveModel : public stf::sdb::StackModel
@@ -48,11 +53,16 @@ class GameModel : public stf::smv::BaseModel
 public:
     static constexpr int Width  = 105;
     static constexpr int Height = Width;
+    static constexpr int TotalBombs = Width * Height * Chunk::BombsPerChunk;
 
 
     GameModel();
     Cell *onClick(const stf::Vec2d &cursor);
     void reset();
+
+    inline uint32_t points() const { return mPoints; }
+    inline uint32_t lifes() const { return mLifes; }
+    inline time_t   gameTime() const { return mGameTime; }
 
     stf::smv::IView *put(stf::smv::IView *sender);
     stf::smv::IView *keyEventsHandler(stf::smv::IView *sender, const int key) override;

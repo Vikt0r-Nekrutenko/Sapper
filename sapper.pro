@@ -6,6 +6,7 @@ CONFIG -= qt
 SOURCES += \
         cells.cpp \
         chunks.cpp \
+        endview.cpp \
         gamemodel.cpp \
         main.cpp
 
@@ -23,4 +24,5 @@ DEPENDPATH += $$PWD/../stf \
 HEADERS += \
     cells.hpp \
     chunks.hpp \
+    endview.hpp \
     gamemodel.hpp

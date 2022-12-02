@@ -4,11 +4,6 @@
 #include "window.hpp"
 #include "gamemodel.hpp"
 
-#define daysFromSeconds(s)      (s / (3600 * 24))
-#define hoursFromSeconds(s)     ((s / 3600) % 24)
-#define minutesFromSeconds(s)   ((s / 60) % 60)
-#define secondsFromSeconds(s)   (s % 60)
-
 class GameView : public stf::smv::IView
 {
     bool mIsConsoleShow = false;
