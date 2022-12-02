@@ -25,7 +25,12 @@ void EndView::show(stf::Renderer &renderer)
                   secondsFromSeconds(GM->gameTime()));
 }
 
-stf::smv::IView *EndView::keyEventsHandler(const int key)
+stf::smv::IView *EndView::keyEventsHandler(const int)
 {
-    return new CloseView(m_model);
+    return new CloseView(static_cast<GameModel*>(m_model));
+}
+
+bool CloseView::isContinue() const
+{
+    return false;
 }
