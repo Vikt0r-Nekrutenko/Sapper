@@ -122,8 +122,11 @@ stf::smv::IView *GameModel::put(stf::smv::IView *sender)
 {
     Cell *selected = onClick(mCursor);
     if (selected->uniqueIntView() == BombCell().uniqueIntView()){
-        if(mLifes == 1)
+        if(mLifes == 1) {
+            results.gameOverHandler();
+            results.save();
             return new EndView(this);
+        }
         --mLifes;
     } else if(selected->uniqueIntView() == LifeCell().uniqueIntView()) {
         put(mCursor, new EmptyCell);

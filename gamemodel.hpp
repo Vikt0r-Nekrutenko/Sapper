@@ -36,7 +36,7 @@ class GameResultModel : public stf::sdb::Model
 public:
     GameResultModel(GameModel *model);
 
-    void gameOverHandler();;
+    void gameOverHandler();
 
     stf::sdb::DateTimeField mTime       = stf::sdb::DateTimeField(this);
     stf::sdb::IntField      mPoints     = stf::sdb::IntField(this);
