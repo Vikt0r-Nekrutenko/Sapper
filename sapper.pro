@@ -9,7 +9,8 @@ SOURCES += \
         endview.cpp \
         gamemodel.cpp \
         gameview.cpp \
-        main.cpp
+        main.cpp \
+        menuview.cpp
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../stf/release/ -lstf
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../stf/debug/ -lstf
@@ -27,4 +28,8 @@ HEADERS += \
     chunks.hpp \
     endview.hpp \
     gamemodel.hpp \
-    gameview.hpp
+    gameview.hpp \
+    menuview.hpp
+
+DISTFILES += \
+    sprs/pause_menu.spr

@@ -1,8 +1,13 @@
 #include "gameview.hpp"
 
 
-GameView::GameView(GameModel *model)
-    : stf::smv::IView(model) { }
+GameView::GameView(GameModel *model, bool isModelReset)
+    : stf::smv::IView(model)
+{
+    if(isModelReset) {
+        static_cast<GameModel *>(m_model)->reset();
+    }
+}
 
 void GameView::show(stf::Renderer &renderer)
 {
@@ -34,8 +39,13 @@ void GameView::show(stf::Renderer &renderer)
     }
     if(GM->mCursor != stf::Vec2d{-1,-1})
     {
-        renderer.drawPixel({halfWidth,     halfHeight + 2}, '>', stf::ColorTable::Red);
-        renderer.drawPixel({halfWidth + 2, halfHeight + 2}, '<', stf::ColorTable::Red);
+        if((halfWidth) % 2 == 0) {
+            renderer.drawPixel({halfWidth,     halfHeight + 2}, '>', stf::ColorTable::Red);
+            renderer.drawPixel({halfWidth + 2, halfHeight + 2}, '<', stf::ColorTable::Red);
+        } else {
+            renderer.drawPixel({halfWidth - 1, halfHeight + 2}, '>', stf::ColorTable::Red);
+            renderer.drawPixel({halfWidth + 1, halfHeight + 2}, '<', stf::ColorTable::Red);
+        }
     }
 
     // HEADER
@@ -98,14 +108,6 @@ stf::smv::IView *GameView::keyEventsHandler(const int key)
 {
     if(key == '`') {
         mIsConsoleShow = mIsConsoleShow ? false : true;
-    } else if(key == 'l') {
-        try {
-            static_cast<GameModel*>(m_model)->saves.load();
-        } catch(...) {  }
-    } else if(key == 'k') {
-        try {
-            static_cast<GameModel*>(m_model)->saves.save();
-        } catch(...) {  }
     }
     return stf::smv::IView::keyEventsHandler(key);
 }

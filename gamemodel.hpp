@@ -77,8 +77,8 @@ private:
 
     Cell *put(const stf::Vec2d &pos, Cell *cell);
 
-    Chunk mBegin = Chunk();
-    stf::sdb::ChunkedMap mField = stf::sdb::ChunkedMap({Width,Height}, &mBegin, true, "sapper.schnks");
+    Chunk mBegin;
+    stf::sdb::ChunkedMap mField;
     std::vector<stf::Vec2d> mBombsPositions;
 
     stf::Vec2d mCursor { Width * Chunk::Width >> 1, Height * Chunk::Height >> 1 };

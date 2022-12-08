@@ -12,13 +12,13 @@ void EndView::show(stf::Renderer &renderer)
     const int hh = renderer.Size.y >> 1;
 
     if(GM->points() == GM->TotalBombs)
-        renderer.draw({hw - 8, hh}, "CONGRATULATIONS!");
+        renderer.draw({hw - 8, hh-2}, "CONGRATULATIONS!");
     else
-        renderer.draw({hw - 5, hh}, "GAME  OVER");
+        renderer.draw({hw - 5, hh-2}, "GAME  OVER");
 
-    renderer.draw({hw - 5, hh+1}, "Points: %d", GM->points());
-    renderer.draw({hw - 5, hh+2}, "Lifes:  %d", GM->lifes());
-    renderer.draw({hw - 10, hh+3}, "Game time:  %d%d%d%d",
+    renderer.draw({hw - 5, hh}, "Points: %d", GM->points());
+    renderer.draw({hw - 5, hh+1}, "Lifes:  %d", GM->lifes());
+    renderer.draw({hw - 10, hh+2}, "Game time:  %d:%d:%d:%d",
                   daysFromSeconds(GM->gameTime()),
                   hoursFromSeconds(GM->gameTime()),
                   minutesFromSeconds(GM->gameTime()),
@@ -28,6 +28,14 @@ void EndView::show(stf::Renderer &renderer)
 stf::smv::IView *EndView::keyEventsHandler(const int)
 {
     return new CloseView(static_cast<GameModel*>(m_model));
+}
+
+CloseView::CloseView(GameModel *model)
+    : stf::smv::IView(model) {}
+
+CloseView::~CloseView()
+{
+    static_cast<GameModel*>(m_model)->saves.save();
 }
 
 bool CloseView::isContinue() const

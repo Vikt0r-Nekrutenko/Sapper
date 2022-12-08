@@ -9,7 +9,7 @@ class GameView : public stf::smv::IView
     bool mIsConsoleShow = false;
 
 public:
-    GameView(GameModel *model);
+    GameView(GameModel *model, bool isModelReset = false);
     void show(stf::Renderer &renderer) override;
     stf::smv::IView *keyEventsHandler(const int key) override;
 

@@ -2,15 +2,15 @@
 #include <string>
 #include <iview.hpp>
 #include "window.hpp"
-#include "gameview.hpp"
+#include "gamemodel.hpp"
+#include "menuview.hpp"
 
 
 class Game : public stf::Window
 {
-    GameModel mModel = GameModel();
-    GameView mView = GameView(&mModel);
+    GameModel mGameModel;
+    MenuView mView = MenuView(&mGameModel);
     stf::smv::IView *mCurrentView = &mView;
-    bool isContinue = true;
 
 public:
 
@@ -22,24 +22,21 @@ public:
 //        stf::Renderer::log.setHeight(14);
     }
 
+    ~Game()
+    {
+//        delete mModel;
+    }
+
     bool onUpdate(const float dt) override
     {
         mCurrentView = mCurrentView->update(dt);
-        mView.show(renderer);
-        return isContinue;
+        mCurrentView->show(renderer);
+        return mCurrentView->isContinue();
     }
 
     void keyEvents(const int key) override
     {
-        switch (key) {
-        case 'q':
-            isContinue = false;
-            break;
-        default:
-            break;
-        }
-
-        mCurrentView = mView.keyEventsHandler(key);
+        mCurrentView = mCurrentView->keyEventsHandler(key);
     }
 
     void mouseEvents(const stf::MouseRecord &mr) override

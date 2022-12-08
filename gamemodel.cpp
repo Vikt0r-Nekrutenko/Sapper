@@ -1,4 +1,6 @@
 #include "gamemodel.hpp"
+#include "endview.hpp"
+#include "menuview.hpp"
 
 GameSaveModel::GameSaveModel(GameModel *model)
     : stf::sdb::StackModel("sapper_saves.sdb"), mModel(model) {}
@@ -48,6 +50,8 @@ stf::sdb::ChunkedMap &GameModel::field()
 }
 
 GameModel::GameModel()
+    : mBegin(Chunk()),
+      mField(stf::sdb::ChunkedMap({Width,Height}, &mBegin, false, "sapper.schnks"))
 {
     try {
         results.load(results.header().size - 1);
@@ -105,12 +109,23 @@ Cell *GameModel::onClick(const stf::Vec2d &cursor)
     return static_cast<Cell*>(mField.at(emptyCells.back()));
 }
 
+void GameModel::reset()
+{
+    mField.dropFile();
+    mCursor = { Width * Chunk::Width >> 1, Height * Chunk::Height >> 1 };
+    mLifes  = 1;
+    mPoints = 0;
+    mGameTime = 0;
+}
+
 stf::smv::IView *GameModel::put(stf::smv::IView *sender)
 {
     Cell *selected = onClick(mCursor);
-    if (selected->uniqueIntView() == BombCell().uniqueIntView())
+    if (selected->uniqueIntView() == BombCell().uniqueIntView()){
+        if(mLifes == 1)
+            return new EndView(this);
         --mLifes;
-    else if(selected->uniqueIntView() == LifeCell().uniqueIntView()) {
+    } else if(selected->uniqueIntView() == LifeCell().uniqueIntView()) {
         put(mCursor, new EmptyCell);
         ++mLifes;
     }
@@ -162,6 +177,8 @@ stf::smv::IView *GameModel::keyEventsHandler(stf::smv::IView *sender, const int 
     }
     case ' ':
         return put(sender);
+    case 'q':
+        return new MenuView(this);
     }
     return sender;
 }
