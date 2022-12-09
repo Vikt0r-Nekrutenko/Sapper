@@ -18,7 +18,7 @@ class MenuView : public stf::smv::IView
 
   protected:
 
-//  stf::Sprite m_logo;
+  stf::SpriteFromBMP m_logo;
   stf::Sprite m_smenu;
   int m_cursor = 0;
   int m_menuItemsCount;

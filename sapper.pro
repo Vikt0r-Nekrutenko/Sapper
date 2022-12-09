@@ -35,3 +35,4 @@ HEADERS += \
 
 DISTFILES += \
     sprs/pause_menu.spr
+    sprs/logo.bmp

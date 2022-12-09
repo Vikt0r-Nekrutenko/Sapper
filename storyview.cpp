@@ -4,12 +4,15 @@
 #include "time.hpp"
 
 StoryView::StoryView(GameModel* model)
-  : IView(model) {}
+  : IView(model),
+    m_logo(stf::SpriteFromBMP("sprs/logo.bmp"))
+{}
 
 void StoryView::show(Renderer& renderer)
 {
   const std::string s = Time(nullptr).asString() + std::string(" %s Points: '%s' | GameTime: %d:%d:%d:%d");
   Vec2d zerop = renderer.Size / 2 - Vec2d(s.length()/2, 0);
+  m_logo.show(renderer, true, {0,0}, {0, -m_logo.Size().y - 2});
 
   try {
       stf::sdb::Model::QueryResult *qres = static_cast<GameModel*>(m_model)->results.all();

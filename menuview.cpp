@@ -5,7 +5,7 @@
 
 MenuView::MenuView(GameModel* model)
   : stf::smv::IView(model),
-//    m_logo(stf::Sprite("sprs/logo.spr")),
+    m_logo(stf::SpriteFromBMP("sprs/logo.bmp")),
     m_smenu(stf::Sprite("sprs/pause_menu.spr"))
 {
     m_menuItemsCount = m_smenu.markers().size() / 2;
@@ -15,7 +15,7 @@ void  MenuView::show(stf::Renderer& renderer)
 {
   IView::show(renderer);
   stf::Vec2d pzero = renderer.Size / 2 - m_smenu.Size() / 2;
-//  m_logo.show(renderer, true, {0,0}, {0, -m_logo.Size().y - 2});
+  m_logo.show(renderer, true, {0,0}, {0, -m_logo.Size().y - 2});
   m_smenu.show(renderer, true);
 
   renderer.drawPixel(pzero + m_smenu.markers().at(m_cursor * 2), '>');
