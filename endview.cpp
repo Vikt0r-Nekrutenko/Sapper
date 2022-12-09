@@ -1,5 +1,6 @@
 #include "endview.hpp"
 #include "gamemodel.hpp"
+#include "menuview.hpp"
 
 EndView::EndView(GameModel *model)
     : stf::smv::IView(model) { }
@@ -27,7 +28,8 @@ void EndView::show(stf::Renderer &renderer)
 
 stf::smv::IView *EndView::keyEventsHandler(const int)
 {
-    return new CloseView(static_cast<GameModel*>(m_model));
+    static_cast<GameModel*>(m_model)->reset();
+    return new MenuView(static_cast<GameModel*>(m_model));
 }
 
 CloseView::CloseView(GameModel *model)

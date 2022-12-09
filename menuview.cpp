@@ -1,6 +1,7 @@
 #include "menuview.hpp"
 #include "gameview.hpp"
 #include "endview.hpp"
+#include "storyview.hpp"
 
 MenuView::MenuView(GameModel* model)
   : stf::smv::IView(model),
@@ -55,8 +56,10 @@ stf::smv::IView* MenuView::menuSelectConfirm()
             try { static_cast<GameModel*>(m_model)->saves.load();
             return new GameView(static_cast<GameModel*>(m_model));
             } catch(...) { }
+        break;
 
-        case 2: break;//return new StoryView(static_cast<GameModel*>(m_model), this);
+        case 2:
+            return new StoryView(static_cast<GameModel*>(m_model));
 
         case 3:
             try { static_cast<GameModel*>(m_model)->saves.save(); } catch(...) { }
