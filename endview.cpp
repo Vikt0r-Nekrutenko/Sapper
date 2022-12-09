@@ -35,11 +35,6 @@ stf::smv::IView *EndView::keyEventsHandler(const int)
 CloseView::CloseView(GameModel *model)
     : stf::smv::IView(model) {}
 
-CloseView::~CloseView()
-{
-    static_cast<GameModel*>(m_model)->saves.save();
-}
-
 bool CloseView::isContinue() const
 {
     return false;

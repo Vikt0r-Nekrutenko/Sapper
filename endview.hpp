@@ -22,7 +22,7 @@ class CloseView : public stf::smv::IView
 public:
 
     CloseView(GameModel* model);
-    ~CloseView() override;
+    ~CloseView() override = default;
     IView* update(const float) override { return this; }
     void show(stf::Renderer &) override { }
     bool isContinue() const override;

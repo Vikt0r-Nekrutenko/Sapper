@@ -181,7 +181,10 @@ stf::smv::IView *GameModel::keyEventsHandler(stf::smv::IView *sender, const int 
     case ' ':
         return put(sender);
     case 'q':
-        return new MenuView(this);
+        try {
+            saves.save();
+            return new MenuView(this);
+        } catch(...) { }
     }
     return sender;
 }

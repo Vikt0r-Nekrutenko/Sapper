@@ -51,7 +51,7 @@ class GameModel : public stf::smv::BaseModel
     friend class GameSaveModel;
     friend class GameView;
 public:
-    static constexpr int Width  = 105;
+    static constexpr int Width  = 5;
     static constexpr int Height = Width;
     static constexpr int TotalBombs = Width * Height * Chunk::BombsPerChunk;
 
