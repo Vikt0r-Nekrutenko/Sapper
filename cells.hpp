@@ -41,6 +41,7 @@ public:
     virtual stf::ColorTable color() const;
 
     Cell *activate();
+    bool isActivated() const;
     int bombsAround() const;
     void bombsAround(int value);
     size_t sizeOfSelf() const override;

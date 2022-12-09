@@ -170,9 +170,10 @@ stf::smv::IView *GameModel::keyEventsHandler(stf::smv::IView *sender, const int 
     case 'f':
     {
         Cell *selected = static_cast<Cell*>(mField.at(mCursor));
-        if(selected->mark() == Cell::MarkedCellView)
-            if(selected->uniqueIntView() == BombCell().uniqueIntView())
-                ++mPoints;
+        if(selected->view() == Cell::UninitialisedCellView && selected->uniqueIntView() == BombCell().uniqueIntView()) {
+            selected->mark();
+            ++mPoints;
+        }
 
         if(mPoints % 8 == 0)
             ++mLifes;

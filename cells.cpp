@@ -60,8 +60,7 @@ void Cell::load(FILE *file)
 
 uint8_t Cell::view() const
 {
-//            return mIsActivated ? mView : mAlterView;
-    return mAlterView == MarkedCellView ? mAlterView : mView;
+    return mIsActivated ? mView : mAlterView;
 }
 
 int Cell::uniqueIntView() const
@@ -98,6 +97,11 @@ Cell *Cell::activate()
 {
     mIsActivated = true;
     return this;
+}
+
+bool Cell::isActivated() const
+{
+    return mIsActivated;
 }
 
 EmptyCell::EmptyCell()
@@ -151,7 +155,6 @@ BombsNeighborCell::BombsNeighborCell()
 uint8_t BombsNeighborCell::view() const
 {
     return mIsActivated ? '0' + mBombsAround : mAlterView;
-    //        return mView;
 }
 
 void *BombsNeighborCell::operator new(size_t size)
