@@ -34,5 +34,5 @@ HEADERS += \
     storyview.hpp
 
 DISTFILES += \
-    sprs/pause_menu.spr
-    sprs/logo.bmp
+    sprs/pause_menu.spr \
+    sprs/logo.bmp \
