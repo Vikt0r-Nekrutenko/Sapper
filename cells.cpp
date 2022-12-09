@@ -30,7 +30,7 @@ void Cell::operator delete(void *ptr)
 
 size_t Cell::sizeOfSelf() const
 {
-    return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mAlterView) + sizeof(mBombsAround) + sizeof(mUniqueView);
+    return sizeof(mView) + sizeof(mColor) + sizeof(mIsActivated) + sizeof(mAlterView) + sizeof(mBombsAround) + sizeof(mPoints) + sizeof(mUniqueView);
 }
 
 uint8_t Cell::mark()
@@ -46,6 +46,7 @@ void Cell::save(FILE *file)
     fwrite(&mAlterView, sizeof(mIsActivated), 1, file);
     fwrite(&mBombsAround, sizeof(mBombsAround), 1, file);
     fwrite(&mUniqueView, sizeof(mUniqueView), 1, file);
+    fwrite(&mPoints, sizeof(mPoints), 1, file);
 }
 
 void Cell::load(FILE *file)
@@ -56,6 +57,7 @@ void Cell::load(FILE *file)
     fread(&mAlterView, sizeof(mIsActivated), 1, file);
     fread(&mBombsAround, sizeof(mBombsAround), 1, file);
     fread(&mUniqueView, sizeof(mUniqueView), 1, file);
+    fread(&mPoints, sizeof(mPoints), 1, file);
 }
 
 uint8_t Cell::view() const
@@ -71,6 +73,13 @@ int Cell::uniqueIntView() const
 stf::ColorTable Cell::color() const
 {
     return mIsActivated ? mColor : stf::ColorTable::Default;
+}
+
+int Cell::pickUpPoints()
+{
+    if(mPoints)
+        return mPoints--;
+    return mPoints;
 }
 
 int Cell::bombsAround() const
@@ -127,6 +136,7 @@ BombCell::BombCell()
 {
     mView = 'o';
     mUniqueView = 2;
+    mPoints = 1;
 }
 
 stf::ColorTable BombCell::color() const

@@ -39,6 +39,7 @@ public:
     virtual uint8_t view() const;
     virtual int uniqueIntView() const;
     virtual stf::ColorTable color() const;
+    virtual int pickUpPoints();
 
     Cell *activate();
     bool isActivated() const;
@@ -51,6 +52,7 @@ protected:
 
     int mBombsAround = 0;
     int mUniqueView = 0;
+    int mPoints = 0;
     bool mIsActivated = false;
     uint8_t mView = UninitialisedCellView;
     uint8_t mAlterView = UninitialisedCellView;
